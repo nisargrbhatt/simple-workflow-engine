@@ -23,8 +23,6 @@ export const startEngine = publicProcedures
     })
   )
   .handler(async ({ context, input }) => {
-    console.log(input, context);
-
     return {
       data: {
         ok: true,

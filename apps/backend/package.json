@@ -2,6 +2,7 @@
   "name": "backend",
   "scripts": {
     "dev": "bun run --hot src/index.ts",
+    "build": "bun build --compile --minify --sourcemap --target=bun-linux-x64 ./src/index.ts --outfile ./build/backend",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "bun run ./src/db/migrate.ts",
     "db:seed": "bun run ./src/db/seed.ts"

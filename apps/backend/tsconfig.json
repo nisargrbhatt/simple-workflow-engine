@@ -5,6 +5,7 @@
     "module": "NodeNext",
     "moduleResolution": "nodenext",
     "baseUrl": ".",
+    "composite": true,
     "paths": {
       "@db/*": ["./src/db/*"],
       "@lib/*": ["./src/lib/*"],

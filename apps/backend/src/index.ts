@@ -8,7 +8,7 @@ import { OpenAPIHandler } from "@orpc/openapi/fetch";
 const app = new Hono();
 
 const openAPIHandler = new OpenAPIHandler(router, {
-  plugins: [new CORSPlugin(), new ZodSmartCoercionPlugin()],
+  plugins: [new CORSPlugin()],
 });
 
 const openAPIGenerator = new OpenAPIGenerator({
