@@ -16,7 +16,7 @@ export const createDefinition = publicProcedures
     z.object({
       name: z.string().trim().min(1, "Name is required"),
       description: z.string().trim().min(1, "Description is required"),
-      type: z.enum([definitionTable.type.enumValues[0], definitionTable.type.enumValues[1]]),
+      type: z.enum([definitionTable.type.enumValues[0], definitionTable.type.enumValues[1]]).default("definition"),
       global: z.record(z.string(), z.any()),
       status: z.enum([definitionTable.status.enumValues[0], definitionTable.status.enumValues[1]]).default("active"),
       uiObject: z.record(z.string(), z.any()),

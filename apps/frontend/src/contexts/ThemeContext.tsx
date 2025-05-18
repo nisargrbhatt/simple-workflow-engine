@@ -1,3 +1,4 @@
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { createContext, FC, ReactNode, useCallback, useContext, useEffect, useState } from "react";
 
 type Theme = "dark" | "light" | "system";
@@ -17,7 +18,7 @@ const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
 export const useTheme = () => {
   const context = useContext(ThemeProviderContext);
 
-  if (context === undefined) throw new Error("useTheme must be used within a ThemeProvider");
+  if (!context) throw new Error("useTheme must be used within a ThemeProvider");
 
   return context;
 };
@@ -61,7 +62,7 @@ const ThemeContextProvider: FC<Props> = ({ children, defaultTheme = "system", st
         theme: theme,
       }}
     >
-      {children}
+      <TooltipProvider>{children}</TooltipProvider>
     </ThemeProviderContext.Provider>
   );
 };
