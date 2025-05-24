@@ -1,20 +1,21 @@
 import { EdgeTypes, NodeTypes } from "@/components/workflow";
 import { useCreateDefinitionContext } from "@/contexts/CreateDefinitionContext";
 import { useTheme } from "@/contexts/ThemeContext";
+import type { IsValidConnection, Node, OnConnect } from "@xyflow/react";
 import {
   addEdge,
   Background,
   Controls,
   getOutgoers,
-  IsValidConnection,
   MarkerType,
   MiniMap,
-  Node,
-  OnConnect,
   ReactFlow,
   useReactFlow,
 } from "@xyflow/react";
-import { FC, useCallback } from "react";
+import type { FC } from "react";
+import { useCallback } from "react";
+import DefinitionBasicDialog from "./DefinitionBasicDialog";
+import { Button } from "@/components/ui/button";
 
 interface Props {}
 
@@ -72,6 +73,12 @@ const DefinitionForm: FC<Props> = () => {
   return (
     <form className="w-full" noValidate onSubmit={onSubmit} id="create-definition-form">
       <div className="flex w-full flex-col items-start justify-start gap-1">
+        <div className="flex w-full flex-row items-center justify-between gap-2">
+          <DefinitionBasicDialog />
+          <Button type="submit" form="create-definition-form" variant={"default"}>
+            Submit
+          </Button>
+        </div>
         <div className="h-[80vh] w-full">
           <ReactFlow
             nodes={nodes}

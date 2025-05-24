@@ -3,7 +3,7 @@ import { Handle, Position, useConnection, useNodeConnections, useReactFlow } fro
 import { memo, useState, type FC } from "react";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { DeleteIcon, SettingsIcon, Shield } from "lucide-react";
+import { DeleteIcon, SettingsIcon, SquareFunction } from "lucide-react";
 import { cn } from "@lib/utils";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -23,7 +23,7 @@ import TaskAddButton from "./TaskAddButton";
 import type { OnMount } from "@monaco-editor/react";
 import { Editor } from "@monaco-editor/react";
 import { useTheme } from "@/contexts/ThemeContext";
-import { GUARD_EXECUTION_FUNCTION_CODE } from "@lib/constant/common";
+import { FUNCTION_EXECUTION_FUNCTION_CODE } from "@lib/constant/common";
 import { useCreateDefinitionContext } from "@/contexts/CreateDefinitionContext";
 import JsonToTS from "json-to-ts";
 
@@ -41,9 +41,9 @@ type DataProps = {
   formValid: boolean;
 };
 
-export type Props = Node<DataProps, "guard">;
+export type Props = Node<DataProps, "function">;
 
-const GuardTask: FC<NodeProps<Props>> = ({ data, id, selected }) => {
+const FunctionTask: FC<NodeProps<Props>> = ({ data, id, selected }) => {
   const { theme } = useTheme();
   const connectionInProgress = useConnection((connection) => connection.inProgress);
   const connectionData = useNodeConnections();
@@ -55,7 +55,7 @@ const GuardTask: FC<NodeProps<Props>> = ({ data, id, selected }) => {
   const taskForm = useForm<z.infer<typeof formSchema>>({
     defaultValues: {
       label: data?.form?.label,
-      exec: data?.form?.exec ?? GUARD_EXECUTION_FUNCTION_CODE,
+      exec: data?.form?.exec ?? FUNCTION_EXECUTION_FUNCTION_CODE,
     },
     resolver: zodResolver(formSchema),
   });
@@ -97,7 +97,6 @@ type ResultMap = Record<${ResultMap}, unknown>;
 ${GlobalMap}
 declare var workflowGlobal: GlobalMap;
 declare var workflowResults: ResultMap;
-
 `,
       "global.d.ts"
     );
@@ -108,7 +107,7 @@ declare var workflowResults: ResultMap;
       <Card className={cn("w-full min-w-[350px]", selected ? "border-muted-foreground shadow-lg" : "")}>
         <CardHeader className="flex flex-row items-center justify-between gap-1">
           <CardTitle className="flex flex-row items-center justify-start gap-2">
-            <Shield className="h-6 w-6" />
+            <SquareFunction className="h-6 w-6" />
             <h3 className="text-xl">{data?.form?.label}</h3>
           </CardTitle>
 
@@ -136,7 +135,7 @@ declare var workflowResults: ResultMap;
         <DialogContent className="min-w-[320px] sm:min-w-[500px] md:min-w-[756px]">
           <DialogHeader>
             <DialogTitle>{data?.form?.label}</DialogTitle>
-            <DialogDescription>Guard Task Configuration</DialogDescription>
+            <DialogDescription>Function Task Configuration</DialogDescription>
           </DialogHeader>
           <Form {...taskForm}>
             <form className="w-full" noValidate onSubmit={onSubmit} id="start-form-config">
@@ -189,4 +188,4 @@ declare var workflowResults: ResultMap;
   );
 };
 
-export default memo(GuardTask);
+export default memo(FunctionTask);

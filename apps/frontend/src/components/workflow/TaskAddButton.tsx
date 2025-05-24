@@ -10,10 +10,10 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { OctagonX, PlayIcon, Plus, Shield } from "lucide-react";
-import { NodeTypes } from "./index";
+import { OctagonX, PlayIcon, Plus, Shield, SquareFunction } from "lucide-react";
+import type { NodeTypes } from "./index";
 import { getRandomIdForTask } from "@lib/random";
-import { GUARD_EXECUTION_FUNCTION_CODE } from "@lib/constant/common";
+import { FUNCTION_EXECUTION_FUNCTION_CODE, GUARD_EXECUTION_FUNCTION_CODE } from "@lib/constant/common";
 
 interface Props {}
 
@@ -62,8 +62,23 @@ const TaskAddButton: FC<Props> = () => {
           data: {
             form: {
               label: "Guard Task",
-              params: {},
               exec: GUARD_EXECUTION_FUNCTION_CODE,
+            },
+            formValid: true,
+          },
+          position: { x: 0, y: 200 },
+        },
+      ]);
+    } else if (taskType === "function") {
+      setNodes((nodes) => [
+        ...nodes,
+        {
+          id: getRandomIdForTask(),
+          type: "function",
+          data: {
+            form: {
+              label: "Function Task",
+              exec: FUNCTION_EXECUTION_FUNCTION_CODE,
             },
             formValid: true,
           },
@@ -95,6 +110,10 @@ const TaskAddButton: FC<Props> = () => {
           <DropdownMenuItem onClick={() => nodeCreator("guard")}>
             <Shield />
             <span>Guard Task</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => nodeCreator("function")}>
+            <SquareFunction />
+            <span>Function Task</span>
           </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>

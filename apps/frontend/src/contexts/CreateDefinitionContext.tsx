@@ -1,12 +1,23 @@
-import { createContext, FC, ReactNode, useContext } from "react";
+import type { FC, ReactNode } from "react";
+import { createContext, useContext } from "react";
 import { useNodesState, useEdgesState } from "@xyflow/react";
 import { getRandomIdForTask } from "@lib/random";
-import { EdgePropTypes, NodePropTypes } from "@/components/workflow";
+import type { EdgePropTypes, NodePropTypes } from "@/components/workflow";
+import type { UseFormReturn } from "react-hook-form";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const formSchema = z.object({
+  name: z.string().trim().min(1, "Name is required"),
+  description: z.string().trim().min(1, "Description is required"),
+  global: z.record(z.string(), z.any()),
+});
 
 const CreateDefinitionContext = createContext<{
   nodesState: ReturnType<typeof useNodesState<NodePropTypes>>;
   edgesState: ReturnType<typeof useEdgesState<EdgePropTypes>>;
+  definitionForm: UseFormReturn<z.infer<typeof formSchema>>;
 } | null>(null);
 
 export const useCreateDefinitionContext = () => {
@@ -22,7 +33,14 @@ interface Props {
 }
 
 const CreateDefinitionContextProvider: FC<Props> = ({ children }) => {
-  const definitionForm = useForm();
+  const definitionForm = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      description: "",
+      global: {},
+    },
+  });
 
   const nodesState = useNodesState<NodePropTypes>([
     {
@@ -45,7 +63,7 @@ const CreateDefinitionContextProvider: FC<Props> = ({ children }) => {
         },
         formValid: true,
       },
-      position: { x: 0, y: 150 },
+      position: { x: 0, y: 200 },
     },
   ]);
   const edgesState = useEdgesState<EdgePropTypes>([]);
@@ -55,6 +73,7 @@ const CreateDefinitionContextProvider: FC<Props> = ({ children }) => {
       value={{
         nodesState,
         edgesState,
+        definitionForm,
       }}
     >
       {children}
