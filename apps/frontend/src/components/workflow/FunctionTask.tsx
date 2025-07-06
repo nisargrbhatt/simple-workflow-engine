@@ -25,7 +25,6 @@ import { Editor } from "@monaco-editor/react";
 import { useTheme } from "@/contexts/ThemeContext";
 import { FUNCTION_EXECUTION_FUNCTION_CODE } from "@lib/constant/common";
 import { useCreateDefinitionContext } from "@/contexts/CreateDefinitionContext";
-import JsonToTS from "json-to-ts";
 
 const formSchema = z.object({
   label: z.string().trim().min(1, "Label is required"),
@@ -86,16 +85,19 @@ const FunctionTask: FC<NodeProps<Props>> = ({ data, id, selected }) => {
     const globalValues = definitionForm.getValues().global;
 
     const ResultMap = nodes.map((node) => `"${node.data?.form?.label}"`).join(" | ");
-
-    const GlobalMap = JsonToTS(globalValues, {
-      rootName: "GlobalMap",
-    }).join("\n");
+    const GlobalMap = globalValues.map((global) => `"${global.key}"`).join(" | ");
 
     monaco?.languages?.typescript?.javascriptDefaults?.addExtraLib(
       `
 type ResultMap = Record<${ResultMap}, unknown>;
-${GlobalMap}
+type GlobalMap = Record<${GlobalMap}, string>;
+/**
+ * Global values
+ */
 declare var workflowGlobal: GlobalMap;
+/**
+ * Results from other tasks
+ */
 declare var workflowResults: ResultMap;
 `,
       "global.d.ts"
@@ -121,7 +123,14 @@ declare var workflowResults: ResultMap;
           </div>
         </CardHeader>
 
-        <Handle type="target" position={Position.Top} />
+        <Handle
+          type="target"
+          position={Position.Top}
+          style={{
+            height: "11px",
+            width: "11px",
+          }}
+        />
 
         <ButtonHandle
           type="source"

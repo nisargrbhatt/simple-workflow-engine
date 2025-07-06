@@ -12,7 +12,7 @@ import {
   ReactFlow,
   useReactFlow,
 } from "@xyflow/react";
-import type { FC } from "react";
+import type { FC, FormEvent } from "react";
 import { useCallback } from "react";
 import DefinitionBasicDialog from "./DefinitionBasicDialog";
 import { Button } from "@/components/ui/button";
@@ -20,7 +20,7 @@ import { Button } from "@/components/ui/button";
 interface Props {}
 
 const DefinitionForm: FC<Props> = () => {
-  const { edgesState, nodesState } = useCreateDefinitionContext();
+  const { edgesState, nodesState, onSubmit } = useCreateDefinitionContext();
   const { theme } = useTheme();
 
   const [nodes, _setNodes, onNodesChange] = nodesState;
@@ -68,10 +68,15 @@ const DefinitionForm: FC<Props> = () => {
     [getNodes, getEdges]
   );
 
-  const onSubmit = () => {};
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    onSubmit();
+  };
 
   return (
-    <form className="w-full" noValidate onSubmit={onSubmit} id="create-definition-form">
+    <form className="w-full" noValidate onSubmit={handleSubmit} id="create-definition-form">
       <div className="flex w-full flex-col items-start justify-start gap-1">
         <div className="flex w-full flex-row items-center justify-between gap-2">
           <DefinitionBasicDialog />

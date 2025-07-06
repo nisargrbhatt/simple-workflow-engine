@@ -1,4 +1,4 @@
-import { createDefinition } from "@modules/definition";
+import { createDefinition, listDefinition } from "@modules/definition";
 import { startEngine } from "@modules/engine";
 
 export const router = {
@@ -7,5 +7,6 @@ export const router = {
   },
   definition: {
     create: createDefinition,
+    list: listDefinition,
   },
 };

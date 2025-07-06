@@ -1,7 +1,8 @@
 import { cn } from "@lib/utils";
-import { Handle, HandleProps, Position } from "@xyflow/react";
+import type { HandleProps } from "@xyflow/react";
+import { Handle, Position } from "@xyflow/react";
 
-import { FC } from "react";
+import type { FC } from "react";
 
 const wrapperClassNames: Record<Position, string> = {
   [Position.Top]: "flex-col-reverse left-1/2 -translate-y-full -translate-x-1/2",
@@ -23,9 +24,13 @@ export const ButtonHandle: FC<Props> = ({ showButton = true, position = Position
       position={position}
       {...props}
       className={cn(
-        "dark:border-secondary dark:bg-secondary h-[11px] w-[11px] rounded-full border border-slate-300 bg-slate-100 transition",
-        props.className
+        props.className,
+        "dark:border-secondary dark:bg-secondary h-[11px] w-[11px] rounded-full border border-slate-300 bg-slate-100 transition"
       )}
+      style={{
+        height: "11px",
+        width: "11px",
+      }}
     >
       {showButton && (
         <div className={`absolute flex items-center ${wrapperClassName} pointer-events-none`}>

@@ -7,7 +7,7 @@ export const definitionTable = pgTable("definitions", {
   type: text({
     enum: ["template", "definition"],
   }).default("definition"),
-  global: json().$type<Record<string, any>>(),
+  global: json().$type<Array<{ key: string; value: string }>>(),
   status: text({ enum: ["active", "inactive"] })
     .default("active")
     .notNull(),

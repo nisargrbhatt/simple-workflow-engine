@@ -1,4 +1,5 @@
-import { Handle, Node, NodeProps, Position, useReactFlow } from "@xyflow/react";
+import type { Node, NodeProps } from "@xyflow/react";
+import { Handle, Position, useReactFlow } from "@xyflow/react";
 import { memo, useState, type FC } from "react";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -81,7 +82,14 @@ const EndTask: FC<NodeProps<Props>> = ({ data, id, selected }) => {
             </Button>
           </div>
         </CardHeader>
-        <Handle type="target" position={Position.Top} />
+        <Handle
+          style={{
+            height: "11px",
+            width: "11px",
+          }}
+          type="target"
+          position={Position.Top}
+        />
       </Card>
       <Dialog open={open} onOpenChange={toggleDialog}>
         <DialogContent className="sm:max-w-[425px]">

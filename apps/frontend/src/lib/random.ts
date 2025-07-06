@@ -4,6 +4,4 @@ const taskID = new ShortUniqueId({
   length: 5,
 });
 
-export const getRandomIdForTask = () => {
-  return taskID.randomUUID();
-};
+export const getRandomIdForTask = () => taskID.randomUUID();

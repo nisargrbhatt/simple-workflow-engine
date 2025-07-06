@@ -3,21 +3,30 @@ import { createContext, useContext } from "react";
 import { useNodesState, useEdgesState } from "@xyflow/react";
 import { getRandomIdForTask } from "@lib/random";
 import type { EdgePropTypes, NodePropTypes } from "@/components/workflow";
-import type { UseFormReturn } from "react-hook-form";
-import { useForm } from "react-hook-form";
+import type { UseFieldArrayReturn, UseFormReturn } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useCreateDefinitionMutation } from "@/api/mutation/createDefinitionMutation";
+import { useNavigate } from "react-router";
 
 const formSchema = z.object({
   name: z.string().trim().min(1, "Name is required"),
   description: z.string().trim().min(1, "Description is required"),
-  global: z.record(z.string(), z.any()),
+  global: z.array(
+    z.object({
+      key: z.string().trim().min(1, "Key is required"),
+      value: z.string().trim().min(1, "Value is required"),
+    })
+  ),
 });
 
 const CreateDefinitionContext = createContext<{
   nodesState: ReturnType<typeof useNodesState<NodePropTypes>>;
   edgesState: ReturnType<typeof useEdgesState<EdgePropTypes>>;
   definitionForm: UseFormReturn<z.infer<typeof formSchema>>;
+  globalValueField: UseFieldArrayReturn<z.infer<typeof formSchema>, "global", "id">;
+  onSubmit: () => Promise<void>;
 } | null>(null);
 
 export const useCreateDefinitionContext = () => {
@@ -33,13 +42,24 @@ interface Props {
 }
 
 const CreateDefinitionContextProvider: FC<Props> = ({ children }) => {
+  const { mutateAsync } = useCreateDefinitionMutation();
+  const navigate = useNavigate();
+
   const definitionForm = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    mode: "all",
+    reValidateMode: "onChange",
     defaultValues: {
       name: "",
       description: "",
-      global: {},
+      global: [],
     },
+  });
+
+  const globalValueField = useFieldArray({
+    control: definitionForm.control,
+    name: "global",
+    keyName: "id",
   });
 
   const nodesState = useNodesState<NodePropTypes>([
@@ -68,12 +88,64 @@ const CreateDefinitionContextProvider: FC<Props> = ({ children }) => {
   ]);
   const edgesState = useEdgesState<EdgePropTypes>([]);
 
+  const onSubmit = async () => {
+    if (!definitionForm.formState.isValid) {
+      return;
+    }
+
+    const formValues = definitionForm.getValues();
+
+    const [nodes] = nodesState;
+    const [edges] = edgesState;
+
+    const workflowDefinitionGraph = nodes?.map((n) => ({
+      id: n.id,
+      name: n?.data?.form?.label,
+      type: n?.type?.toUpperCase(),
+      exec: "exec" in n.data.form ? n?.data?.form?.exec : "",
+      next:
+        edges
+          .filter((l) => l.source === n.id)
+          .map((i) => i.target)
+          .filter(Boolean) ?? [],
+      previous:
+        edges
+          .filter((l) => l.target === n.id)
+          .map((i) => i.source)
+          .filter(Boolean) ?? [],
+    }));
+
+    const payload = {
+      name: formValues.name,
+      description: formValues.description,
+      type: "definition",
+      global: formValues.global ?? {},
+      status: "active",
+      uiObject: {
+        nodes: nodes,
+        edges: edges,
+      },
+      tasks: workflowDefinitionGraph,
+    };
+
+    await mutateAsync(payload, {
+      onSuccess: () => {
+        navigate("/definitions");
+      },
+      onError: (error) => {
+        console.error(error);
+      },
+    });
+  };
+
   return (
     <CreateDefinitionContext.Provider
       value={{
         nodesState,
         edgesState,
         definitionForm,
+        globalValueField,
+        onSubmit,
       }}
     >
       {children}
