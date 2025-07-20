@@ -1,0 +1,21 @@
+{
+  "name": "@repo/orpc",
+  "version": "0.0.0",
+  "devDependencies": {
+    "typescript": "latest",
+    "@repo/typescript-config": "workspace:*"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "private": true,
+  "scripts": {
+    "check-types": "tsc --noEmit"
+  },
+  "sideEffects": false,
+  "type": "module",
+  "dependencies": {
+    "@orpc/contract": "^1.7.4",
+    "zod": "^4.0.5"
+  }
+}

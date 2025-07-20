@@ -9,15 +9,17 @@
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.0",
+    "@orpc/contract": "^1.7.4",
     "@orpc/openapi": "^1.7.4",
     "@orpc/server": "^1.7.4",
     "@orpc/zod": "^1.7.4",
+    "@repo/orpc": "workspace:*",
+    "@repo/utils": "workspace:*",
     "axios": "^1.9.0",
     "dotenv": "^16.5.0",
     "drizzle-orm": "^0.43.1",
     "hono": "^4.8.5",
-    "zod": "^3.25.76",
-    "@repo/utils": "workspace:*"
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@types/bun": "latest",

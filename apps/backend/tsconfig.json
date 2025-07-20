@@ -2,16 +2,31 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
     "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
     "module": "NodeNext",
     "moduleResolution": "nodenext",
     "baseUrl": ".",
     "composite": true,
     "paths": {
-      "@db/*": ["./src/db/*"],
-      "@lib/*": ["./src/lib/*"],
-      "@engine/*": ["./src/engine/*"],
-      "@modules/*": ["./src/modules/*"],
-      "@/*": ["./src/*"]
+      "@db/*": [
+        "./src/db/*"
+      ],
+      "@lib/*": [
+        "./src/lib/*"
+      ],
+      "@engine/*": [
+        "./src/engine/*"
+      ],
+      "@modules/*": [
+        "./src/modules/*"
+      ],
+      "@/*": [
+        "./src/*"
+      ]
     }
-  }
+  },
+  "exclude": [
+    "node_modules"
+  ]
 }
