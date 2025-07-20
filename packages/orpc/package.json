@@ -15,7 +15,7 @@
   "sideEffects": false,
   "type": "module",
   "dependencies": {
-    "@orpc/contract": "^1.7.4",
-    "zod": "^4.0.5"
+    "@orpc/contract": "catalog:",
+    "zod": "catalog:"
   }
 }

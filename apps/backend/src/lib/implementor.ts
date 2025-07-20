@@ -6,4 +6,4 @@ type HonoContext = {
   req: HonoRequest;
 };
 
-export const os = implement(contractRouter).$context<HonoContext>();
+export const contractOpenSpec = implement(contractRouter).$context<HonoContext>();

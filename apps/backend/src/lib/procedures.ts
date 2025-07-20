@@ -9,7 +9,7 @@ type HonoContext = {
 
 const internalApiKey = env.SERVER_KEY;
 
-const internalAuth = oo.spec(
+export const internalAuth = oo.spec(
   os.$context<HonoContext>().middleware(({ context, next }) => {
     const apiKey = context.req.header('x-api-key');
 
@@ -32,7 +32,7 @@ const internalAuth = oo.spec(
   }
 );
 
-const privateAuth = oo.spec(
+export const privateAuth = oo.spec(
   os.$context<HonoContext>().middleware(({ context, next }) => {
     const authHeader = context.req.header('authorization')?.split(' ')?.at(1);
 

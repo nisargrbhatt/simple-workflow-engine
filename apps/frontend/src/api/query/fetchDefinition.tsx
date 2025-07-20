@@ -1,4 +1,4 @@
-import { backendClient } from '@lib/api';
+import { openApiClient } from '@lib/orpc';
 import { useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
 
@@ -26,11 +26,14 @@ export const useFetchDefinition = (definitionId: string) => {
   const fetchDefinition = useQuery({
     queryKey: [queryKey, definitionId],
     queryFn: async ({ signal }) => {
-      const response = await backendClient
-        .get(`/rpc/definition/${definitionId}`, {
-          signal,
-        })
-        .then((res) => responseSchema.parse(res.data.data));
+      const response = await openApiClient.definition
+        .get(
+          {
+            id: Number(definitionId),
+          },
+          { signal }
+        )
+        .then((res) => responseSchema.parse(res.data));
 
       return response;
     },

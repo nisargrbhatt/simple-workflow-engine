@@ -4,9 +4,9 @@ import {
   fetchEditDefinitionContract,
   deleteDefinitionContract,
   fetchDefinitionContract,
-} from "./definition";
-import { startEngineContract } from "./engine";
-import { oc } from "@orpc/contract";
+} from './definition';
+import { startEngineContract } from './engine';
+import { oc } from '@orpc/contract';
 
 export const contractRouter = {
   engine: oc.router({
@@ -20,5 +20,3 @@ export const contractRouter = {
     get: fetchDefinitionContract,
   }),
 };
-
-export type ContractRouter = typeof contractRouter;

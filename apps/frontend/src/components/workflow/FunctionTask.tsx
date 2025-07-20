@@ -1,13 +1,19 @@
-import type { Node, NodeProps } from '@xyflow/react';
-import { Handle, Position, useConnection, useNodeConnections, useReactFlow } from '@xyflow/react';
-import { memo, useState, type FC } from 'react';
-import { Card, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { DeleteIcon, SettingsIcon, SquareFunction } from 'lucide-react';
-import { cn } from '@lib/utils';
-import { z } from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import type { Node, NodeProps } from "@xyflow/react";
+import {
+  Handle,
+  Position,
+  useConnection,
+  useNodeConnections,
+  useReactFlow,
+} from "@xyflow/react";
+import { memo, useState, type FC } from "react";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { DeleteIcon, SettingsIcon, SquareFunction } from "lucide-react";
+import { cn } from "@lib/utils";
+import { z } from "zod/v3";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Dialog,
   DialogContent,
@@ -15,24 +21,31 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { ButtonHandle } from './ButtonHandle';
-import TaskAddButton from './TaskAddButton';
-import type { OnMount } from '@monaco-editor/react';
-import { Editor } from '@monaco-editor/react';
-import { useTheme } from '@/contexts/ThemeContext';
-import { FUNCTION_EXECUTION_FUNCTION_CODE } from '@lib/constant/common';
-import { useCreateDefinitionContext } from '@/contexts/CreateDefinitionContext';
+} from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { ButtonHandle } from "./ButtonHandle";
+import TaskAddButton from "./TaskAddButton";
+import type { OnMount } from "@monaco-editor/react";
+import { Editor } from "@monaco-editor/react";
+import { useTheme } from "@/contexts/ThemeContext";
+import { FUNCTION_EXECUTION_FUNCTION_CODE } from "@lib/constant/common";
+import { useCreateDefinitionContext } from "@/contexts/CreateDefinitionContext";
 
 const formSchema = z.object({
-  label: z.string().trim().min(1, 'Label is required'),
+  label: z.string().trim().min(1, "Label is required"),
   exec: z
     .string({
-      required_error: 'Function code is required',
+      required_error: "Function code is required",
     })
-    .min(1, 'Function code is required'),
+    .min(1, "Function code is required"),
 });
 
 type DataProps = {
@@ -40,11 +53,13 @@ type DataProps = {
   formValid: boolean;
 };
 
-export type Props = Node<DataProps, 'function'>;
+export type Props = Node<DataProps, "function">;
 
 const FunctionTask: FC<NodeProps<Props>> = ({ data, id, selected }) => {
   const { theme } = useTheme();
-  const connectionInProgress = useConnection((connection) => connection.inProgress);
+  const connectionInProgress = useConnection(
+    (connection) => connection.inProgress
+  );
   const connectionData = useNodeConnections();
   const [open, setOpen] = useState<boolean>(false);
   const { updateNodeData, deleteElements } = useReactFlow();
@@ -84,8 +99,12 @@ const FunctionTask: FC<NodeProps<Props>> = ({ data, id, selected }) => {
   const onMount: OnMount = (_, monaco) => {
     const globalValues = definitionForm.getValues().global;
 
-    const ResultMap = nodes.map((node) => `"${node.data?.form?.label}"`).join(' | ');
-    const GlobalMap = globalValues.map((global) => `"${global.key}"`).join(' | ');
+    const ResultMap = nodes
+      .map((node) => `"${node.data?.form?.label}"`)
+      .join(" | ");
+    const GlobalMap = globalValues
+      .map((global) => `"${global.key}"`)
+      .join(" | ");
 
     monaco?.languages?.typescript?.javascriptDefaults?.addExtraLib(
       `
@@ -100,13 +119,18 @@ declare var workflowGlobal: GlobalMap;
  */
 declare var workflowResults: ResultMap;
 `,
-      'global.d.ts'
+      "global.d.ts"
     );
   };
 
   return (
     <>
-      <Card className={cn('w-full min-w-[350px]', selected ? 'border-muted-foreground shadow-lg' : '')}>
+      <Card
+        className={cn(
+          "w-full min-w-[350px]",
+          selected ? "border-muted-foreground shadow-lg" : ""
+        )}
+      >
         <CardHeader className="flex flex-row items-center justify-between gap-1">
           <CardTitle className="flex flex-row items-center justify-start gap-2">
             <SquareFunction className="h-6 w-6" />
@@ -114,10 +138,22 @@ declare var workflowResults: ResultMap;
           </CardTitle>
 
           <div className="flex flex-row items-center justify-end gap-2">
-            <Button variant={'outline'} size="icon" type="button" onClick={toggleDialog} title="Configure">
+            <Button
+              variant={"outline"}
+              size="icon"
+              type="button"
+              onClick={toggleDialog}
+              title="Configure"
+            >
               <SettingsIcon />
             </Button>
-            <Button variant={'outline'} size="icon" type="button" onClick={deleteNode} title="Delete">
+            <Button
+              variant={"outline"}
+              size="icon"
+              type="button"
+              onClick={deleteNode}
+              title="Delete"
+            >
               <DeleteIcon />
             </Button>
           </div>
@@ -127,8 +163,8 @@ declare var workflowResults: ResultMap;
           type="target"
           position={Position.Top}
           style={{
-            height: '11px',
-            width: '11px',
+            height: "11px",
+            width: "11px",
           }}
         />
 
@@ -147,7 +183,12 @@ declare var workflowResults: ResultMap;
             <DialogDescription>Function Task Configuration</DialogDescription>
           </DialogHeader>
           <Form {...taskForm}>
-            <form className="w-full" noValidate onSubmit={onSubmit} id="start-form-config">
+            <form
+              className="w-full"
+              noValidate
+              onSubmit={onSubmit}
+              id="start-form-config"
+            >
               <div className="flex w-full flex-col items-start justify-start gap-2">
                 <FormField
                   control={taskForm.control}
@@ -156,7 +197,11 @@ declare var workflowResults: ResultMap;
                     <FormItem className="w-full">
                       <FormLabel>Label</FormLabel>
                       <FormControl>
-                        <Input placeholder="Label" {...field} className="w-full" />
+                        <Input
+                          placeholder="Label"
+                          {...field}
+                          className="w-full"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -176,8 +221,8 @@ declare var workflowResults: ResultMap;
                           }}
                           onMount={onMount}
                           language="javascript"
-                          height={'50vh'}
-                          theme={theme === 'dark' ? 'vs-dark' : 'light'}
+                          height={"50vh"}
+                          theme={theme === "dark" ? "vs-dark" : "light"}
                         />
                       </FormControl>
                     </FormItem>

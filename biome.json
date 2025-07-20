@@ -1,7 +1,15 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.1.2/schema.json",
   "vcs": { "enabled": false, "clientKind": "git", "useIgnoreFile": false },
-  "files": { "ignoreUnknown": false, "includes": ["apps/**/*.ts", "apps/**/*.tsx", "packages/**/*.ts", "packages/**/*.tsx"] },
+  "files": {
+    "ignoreUnknown": false,
+    "includes": [
+      "apps/**/*.ts",
+      "apps/**/*.tsx",
+      "packages/**/*.ts",
+      "packages/**/*.tsx"
+    ]
+  },
   "formatter": {
     "enabled": true,
     "formatWithErrors": false,
@@ -48,7 +56,7 @@
         "noUnsafeOptionalChaining": "error",
         "noUnusedLabels": "error",
         "noUnusedVariables": "error",
-        "useExhaustiveDependencies": "warn",
+        "useExhaustiveDependencies": "off",
         "useHookAtTopLevel": "error",
         "useIsNan": "error",
         "useValidForDirection": "error",
@@ -75,7 +83,7 @@
         "noDuplicateObjectKeys": "error",
         "noDuplicateParameters": "error",
         "noEmptyBlockStatements": "error",
-        "noExplicitAny": "info",
+        "noExplicitAny": "off",
         "noExtraNonNullAssertion": "error",
         "noFallthroughSwitchClause": "error",
         "noFunctionAssign": "error",
@@ -143,6 +151,6 @@
   ],
   "assist": {
     "enabled": true,
-    "actions": { "source": { "organizeImports": "on" } }
+    "actions": { "source": { "organizeImports": "off" } }
   }
 }

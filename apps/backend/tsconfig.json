@@ -1,13 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "@repo/typescript-config/base.json",
   "compilerOptions": {
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "module": "NodeNext",
-    "moduleResolution": "nodenext",
     "baseUrl": ".",
-    "composite": true,
     "paths": {
       "@db/*": [
         "./src/db/*"
@@ -26,7 +21,4 @@
       ]
     }
   },
-  "exclude": [
-    "node_modules"
-  ]
 }

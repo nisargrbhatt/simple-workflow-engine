@@ -1,4 +1,4 @@
-import { backendClient } from '@lib/api';
+import { openApiClient } from '@lib/orpc';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router';
@@ -37,20 +37,18 @@ export const useListDefinition = () => {
   const listDefinition = useQuery({
     queryKey: [queryKey, paginationState.page, paginationState.size],
     queryFn: async ({ signal }) => {
-      const response = await backendClient
-        .get<{
-          message: string;
-          data: unknown;
-        }>(
-          `/rpc/definition/list?${new URLSearchParams({
+      const response = await openApiClient.definition
+        .list(
+          {
             page: paginationState.page.toString(),
-            size: paginationState.size.toString(),
-          })}`,
+            limit: paginationState.size.toString(),
+          },
           {
             signal,
           }
         )
-        .then((res) => responseSchema.parse(res.data.data));
+        .then((res) => responseSchema.parse(res.data));
+
       return response;
     },
   });
