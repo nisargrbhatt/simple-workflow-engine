@@ -1,5 +1,5 @@
-import { useMemo, type FC } from "react";
-import { Button } from "@/components/ui/button";
+import { useMemo, type FC } from 'react';
+import { Button } from '@/components/ui/button';
 
 interface Props {
   pagination: {

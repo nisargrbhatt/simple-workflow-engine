@@ -1,5 +1,9 @@
 export class Engine {
-  constructor() {}
+  constructor() {
+    console.log('Engine initialized');
+  }
 
-  async process() {}
+  async process() {
+    console.log('Processing');
+  }
 }

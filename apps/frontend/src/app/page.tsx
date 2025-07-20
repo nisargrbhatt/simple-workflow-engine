@@ -1,20 +1,20 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { FC } from "react";
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import type { FC } from 'react';
 
 interface Props {}
 
 const HomePage: FC<Props> = () => {
   const call = () => {
-    fetch("http://localhost:3000/rpc/engine/start", {
-      method: "POST",
+    fetch('http://localhost:3000/rpc/engine/start', {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        workflowDefinitionId: "",
+        workflowDefinitionId: '',
         globalParams: {
-          ANY_ADDITIONAL_PROPERTY: "anything",
+          ANY_ADDITIONAL_PROPERTY: 'anything',
         },
       }),
     })
@@ -34,7 +34,7 @@ const HomePage: FC<Props> = () => {
         <p> This is a description</p>
       </CardContent>
       <CardFooter>
-        <Button variant={"outline"} onClick={call}>
+        <Button variant={'outline'} onClick={call}>
           Hello
         </Button>
       </CardFooter>

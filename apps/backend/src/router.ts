@@ -1,5 +1,11 @@
-import { createDefinition, listDefinition } from "@modules/definition";
-import { startEngine } from "@modules/engine";
+import {
+  createDefinition,
+  deleteDefinition,
+  fetchDefinition,
+  fetchEditDefinition,
+  listDefinition,
+} from '@modules/definition';
+import { startEngine } from '@modules/engine';
 
 export const router = {
   engine: {
@@ -8,5 +14,8 @@ export const router = {
   definition: {
     create: createDefinition,
     list: listDefinition,
+    fetchEdit: fetchEditDefinition,
+    delete: deleteDefinition,
+    get: fetchDefinition,
   },
 };

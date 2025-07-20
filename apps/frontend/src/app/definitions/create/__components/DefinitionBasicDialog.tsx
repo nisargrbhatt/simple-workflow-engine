@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -6,15 +6,15 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Form, FormControl, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { FormField } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { useCreateDefinitionContext } from "@/contexts/CreateDefinitionContext";
-import { DeleteIcon, InfoIcon, Settings } from "lucide-react";
-import { useState, type FC } from "react";
+} from '@/components/ui/dialog';
+import { Form, FormControl, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { FormField } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { useCreateDefinitionContext } from '@/contexts/CreateDefinitionContext';
+import { DeleteIcon, InfoIcon, Settings } from 'lucide-react';
+import { useState, type FC } from 'react';
 
 interface Props {}
 
@@ -30,7 +30,7 @@ const DefinitionBasicDialog: FC<Props> = () => {
     <div>
       <Button
         type="button"
-        variant={definitionForm.formState.isValid ? "outline" : "destructive"}
+        variant={definitionForm.formState.isValid ? 'outline' : 'destructive'}
         onClick={() => {
           setOpen(() => true);
         }}
@@ -125,8 +125,8 @@ const DefinitionBasicDialog: FC<Props> = () => {
                     </div>
                     <Button
                       type="button"
-                      size={"icon"}
-                      variant={"outline"}
+                      size={'icon'}
+                      variant={'outline'}
                       onClick={() => globalValueField.remove(index)}
                     >
                       <DeleteIcon />
@@ -135,9 +135,9 @@ const DefinitionBasicDialog: FC<Props> = () => {
                 ))}
                 <Button
                   type="button"
-                  size={"sm"}
-                  variant={"outline"}
-                  onClick={() => globalValueField.append({ key: "", value: "" })}
+                  size={'sm'}
+                  variant={'outline'}
+                  onClick={() => globalValueField.append({ key: '', value: '' })}
                 >
                   Add Global Value
                 </Button>

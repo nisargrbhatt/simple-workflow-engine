@@ -1,8 +1,8 @@
-import { backendClient } from "@lib/api";
-import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router";
-import { z } from "zod";
+import { backendClient } from '@lib/api';
+import { useQuery } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router';
+import { z } from 'zod';
 
 const responseSchema = z.object({
   list: z.array(
@@ -10,7 +10,7 @@ const responseSchema = z.object({
       id: z.number(),
       name: z.string(),
       description: z.string(),
-      status: z.enum(["active", "inactive"]),
+      status: z.enum(['active', 'inactive']),
       createdAt: z.string(),
     })
   ),
@@ -21,7 +21,7 @@ const responseSchema = z.object({
   }),
 });
 
-export const queryKey = "list-definition";
+export const queryKey = 'list-definition';
 
 export const useListDefinition = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -30,8 +30,8 @@ export const useListDefinition = () => {
     page: number;
     size: number;
   }>({
-    page: Number(searchParams.get("page") ?? "1"),
-    size: Number(searchParams.get("size") ?? "10"),
+    page: Number(searchParams.get('page') ?? '1'),
+    size: Number(searchParams.get('size') ?? '10'),
   });
 
   const listDefinition = useQuery({

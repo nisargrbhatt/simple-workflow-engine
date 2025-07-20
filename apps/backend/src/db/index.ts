@@ -1,8 +1,9 @@
-import { neon } from "@neondatabase/serverless";
-import { drizzle } from "drizzle-orm/neon-http";
-import { definitionTable, runtimeLogTable, runtimeTable, runtimeTaskTable } from "./schema";
+import { neon } from '@neondatabase/serverless';
+import { drizzle } from 'drizzle-orm/neon-http';
+import { definitionTable, runtimeLogTable, runtimeTable, runtimeTaskTable } from './schema';
+import { env } from 'bun';
 
-const dbUrl = Bun.env.DATABASE_URL!;
+const dbUrl = env.DATABASE_URL!;
 
 const sql = neon(dbUrl);
 

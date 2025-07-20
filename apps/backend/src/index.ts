@@ -1,9 +1,10 @@
-import { Hono } from "hono";
-import { router } from "./router";
-import { CORSPlugin } from "@orpc/server/plugins";
-import { ZodSmartCoercionPlugin, ZodToJsonSchemaConverter } from "@orpc/zod";
-import { OpenAPIGenerator } from "@orpc/openapi";
-import { OpenAPIHandler } from "@orpc/openapi/fetch";
+import { Hono } from 'hono';
+import { router } from './router';
+import { CORSPlugin } from '@orpc/server/plugins';
+import { ZodToJsonSchemaConverter } from '@orpc/zod';
+import { OpenAPIGenerator } from '@orpc/openapi';
+import { OpenAPIHandler } from '@orpc/openapi/fetch';
+import { env } from 'bun';
 
 const app = new Hono();
 
@@ -46,7 +47,7 @@ const html = `
 
 app.use(async (c, next) => {
   const { matched, response } = await openAPIHandler.handle(c.req.raw, {
-    prefix: "/rpc",
+    prefix: '/rpc',
     context: {
       req: c.req,
     }, // Provide initial context if needed
@@ -56,24 +57,23 @@ app.use(async (c, next) => {
     return c.newResponse(response.body, response);
   }
 
-  if (c.req.path === "/spec.json") {
+  if (c.req.path === '/spec.json') {
     const spec = await openAPIGenerator.generate(router, {
       info: {
-        title: "Workflow Engine",
-        version: "1.0.0",
+        title: 'Workflow Engine',
+        version: '1.0.0',
       },
-      servers: [{ url: "/rpc" } /** Should use absolute URLs in production */],
-      security: [{ bearerAuth: [], apiKey: [] }],
+      servers: [{ url: '/rpc' } /** Should use absolute URLs in production */],
       components: {
         securitySchemes: {
           bearerAuth: {
-            type: "http",
-            scheme: "bearer",
+            type: 'http',
+            scheme: 'bearer',
           },
           apiKey: {
-            type: "apiKey",
-            name: "x-api-key",
-            in: "header",
+            type: 'apiKey',
+            name: 'x-api-key',
+            in: 'header',
           },
         },
       },
@@ -87,5 +87,5 @@ app.use(async (c, next) => {
 
 export default {
   fetch: app.fetch,
-  port: Bun.env?.["PORT"] ?? 3000,
+  port: env?.['PORT'] ?? 3000,
 };

@@ -1,7 +1,7 @@
-import { EdgeTypes, NodeTypes } from "@/components/workflow";
-import { useCreateDefinitionContext } from "@/contexts/CreateDefinitionContext";
-import { useTheme } from "@/contexts/ThemeContext";
-import type { IsValidConnection, Node, OnConnect } from "@xyflow/react";
+import { EdgeTypes, NodeTypes } from '@/components/workflow';
+import { useCreateDefinitionContext } from '@/contexts/CreateDefinitionContext';
+import { useTheme } from '@/contexts/ThemeContext';
+import type { IsValidConnection, Node, OnConnect } from '@xyflow/react';
 import {
   addEdge,
   Background,
@@ -11,11 +11,11 @@ import {
   MiniMap,
   ReactFlow,
   useReactFlow,
-} from "@xyflow/react";
-import type { FC, FormEvent } from "react";
-import { useCallback } from "react";
-import DefinitionBasicDialog from "./DefinitionBasicDialog";
-import { Button } from "@/components/ui/button";
+} from '@xyflow/react';
+import type { FC, FormEvent } from 'react';
+import { useCallback } from 'react';
+import DefinitionBasicDialog from './DefinitionBasicDialog';
+import { Button } from '@/components/ui/button';
 
 interface Props {}
 
@@ -30,7 +30,7 @@ const DefinitionForm: FC<Props> = () => {
   const onConnect: OnConnect = useCallback(
     (connection) =>
       setEdges((edges) =>
-        addEdge({ ...connection, animated: true, markerEnd: { type: MarkerType.ArrowClosed }, type: "custom" }, edges)
+        addEdge({ ...connection, animated: true, markerEnd: { type: MarkerType.ArrowClosed }, type: 'custom' }, edges)
       ),
     [setEdges]
   );
@@ -80,7 +80,7 @@ const DefinitionForm: FC<Props> = () => {
       <div className="flex w-full flex-col items-start justify-start gap-1">
         <div className="flex w-full flex-row items-center justify-between gap-2">
           <DefinitionBasicDialog />
-          <Button type="submit" form="create-definition-form" variant={"default"}>
+          <Button type="submit" form="create-definition-form" variant={'default'}>
             Submit
           </Button>
         </div>

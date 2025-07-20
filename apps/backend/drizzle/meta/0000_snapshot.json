@@ -158,12 +158,8 @@
           "name": "runtime_logs_runtimeId_runtimes_id_fk",
           "tableFrom": "runtime_logs",
           "tableTo": "runtimes",
-          "columnsFrom": [
-            "runtimeId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["runtimeId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -171,12 +167,8 @@
           "name": "runtime_logs_definitionId_definitions_id_fk",
           "tableFrom": "runtime_logs",
           "tableTo": "definitions",
-          "columnsFrom": [
-            "definitionId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["definitionId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -241,12 +233,8 @@
           "name": "runtimes_definitionId_definitions_id_fk",
           "tableFrom": "runtimes",
           "tableTo": "definitions",
-          "columnsFrom": [
-            "definitionId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["definitionId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -334,12 +322,8 @@
           "name": "runtime_tasks_runtimeId_runtimes_id_fk",
           "tableFrom": "runtime_tasks",
           "tableTo": "runtimes",
-          "columnsFrom": [
-            "runtimeId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["runtimeId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }

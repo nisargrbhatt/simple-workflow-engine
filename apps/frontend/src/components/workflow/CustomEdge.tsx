@@ -1,10 +1,10 @@
-import { BaseEdge, Edge, EdgeLabelRenderer, type EdgeProps, getSmoothStepPath, useReactFlow } from "@xyflow/react";
+import { BaseEdge, type Edge, EdgeLabelRenderer, type EdgeProps, getSmoothStepPath, useReactFlow } from '@xyflow/react';
 
-import { memo, type FC } from "react";
-import { Button } from "@/components/ui/button";
-import { DeleteIcon } from "lucide-react";
+import { memo, type FC } from 'react';
+import { Button } from '@/components/ui/button';
+import { DeleteIcon } from 'lucide-react';
 
-export type Props = Edge<Record<string, unknown>, "custom">;
+export type Props = Edge<Record<string, unknown>, 'custom'>;
 
 const CustomEdge: FC<EdgeProps<Props>> = ({
   id,
@@ -42,7 +42,7 @@ const CustomEdge: FC<EdgeProps<Props>> = ({
               transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
             }}
           >
-            <Button size={"icon"} variant={"outline"} title="Delete" type="button" onClick={onEdgeClick}>
+            <Button size={'icon'} variant={'outline'} title="Delete" type="button" onClick={onEdgeClick}>
               <DeleteIcon />
             </Button>
           </div>

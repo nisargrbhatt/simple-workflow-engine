@@ -1,19 +1,11 @@
-import { useListDefinition } from "@/api/query/listDefinition";
-import SimplePagination from "@/components/helpers/SimplePagination";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { PlusIcon } from "lucide-react";
-import type { FC } from "react";
-import { useEffect } from "react";
-import { Link } from "react-router";
+import { useListDefinition } from '@/api/query/listDefinition';
+import SimplePagination from '@/components/helpers/SimplePagination';
+import { Button } from '@/components/ui/button';
+import { PlusIcon } from 'lucide-react';
+import type { FC } from 'react';
+import { useEffect } from 'react';
+import { Link } from 'react-router';
+import DefinitionCard from './__components/DefinitionCard';
 
 interface Props {}
 
@@ -34,9 +26,9 @@ const DefinitionsPage: FC<Props> = () => {
       </h1>
       <p className="text-foreground max-w-2xl text-base font-light sm:text-lg">List of all definitions</p>
       <div className="flex flex-row items-center justify-start gap-1">
-        <Link to={"/definitions/create"}>
+        <Link to={'/definitions/create'}>
           <Button>
-            <PlusIcon /> Create Definition
+            <PlusIcon /> Create
           </Button>
         </Link>
       </div>
@@ -46,22 +38,14 @@ const DefinitionsPage: FC<Props> = () => {
         {data && !isLoading ? (
           <div className="grid w-full grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3">
             {data?.list?.map((i) => (
-              <Card key={i.id}>
-                <CardHeader>
-                  <CardTitle>{i.name}</CardTitle>
-                  <CardDescription>{new Date(i.createdAt).toLocaleDateString()}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="w-full max-w-[30ch] text-sm text-gray-500">{i.description}</p>
-                </CardContent>
-                <CardFooter>
-                  <CardAction>
-                    <Link to={`/definitions/${i.id}`}>
-                      <Button type="button">View</Button>
-                    </Link>
-                  </CardAction>
-                </CardFooter>
-              </Card>
+              <DefinitionCard
+                key={i.id}
+                id={i.id}
+                name={i.name}
+                description={i.description}
+                status={i.status}
+                createdAt={i.createdAt}
+              />
             ))}
           </div>
         ) : null}
