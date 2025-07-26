@@ -119,7 +119,7 @@ const StartTask: FC<NodeProps<Props>> = ({ data, id, selected }) => {
             </form>
           </Form>
           <DialogFooter>
-            <Button type="submit" form="start-form-config">
+            <Button type="button" onClick={onSubmit}>
               Submit
             </Button>
           </DialogFooter>

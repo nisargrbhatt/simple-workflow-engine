@@ -68,7 +68,7 @@ const RunNowAction: FC<Props> = ({ id }) => {
 
   return (
     <Dialog>
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button type="button">Run Now</Button>
       </DialogTrigger>
       <DialogContent>
@@ -115,7 +115,7 @@ const RunNowAction: FC<Props> = ({ id }) => {
               Cancel
             </Button>
           </DialogClose>
-          <Button type="submit" form="run-now-form">
+          <Button type="submit" form="run-now-form" onClick={onSubmit}>
             Run Now
           </Button>
         </DialogFooter>

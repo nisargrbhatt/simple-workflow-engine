@@ -1,11 +1,20 @@
-import { neon } from '@neondatabase/serverless';
-import { drizzle } from 'drizzle-orm/neon-http';
-import { definitionTable, runtimeLogTable, runtimeTable, runtimeTaskTable } from './schema';
+import { drizzle } from 'drizzle-orm/postgres-js';
+import {
+  definitionTable,
+  definitionTableRelations,
+  runtimeLogTable,
+  runtimeLogTableRelations,
+  runtimeTable,
+  runtimeTableRelations,
+  runtimeTaskTable,
+  runtimeTaskTableRelations,
+} from './schema';
 import { env } from 'bun';
+import postgres from 'postgres';
 
 const dbUrl = env.DATABASE_URL!;
 
-const sql = neon(dbUrl);
+const sql = postgres(dbUrl);
 
 export const db = drizzle({
   client: sql,
@@ -14,5 +23,9 @@ export const db = drizzle({
     runtime: runtimeTable,
     runtimeTask: runtimeTaskTable,
     runtimeLog: runtimeLogTable,
+    definitionTableRelations: definitionTableRelations,
+    runtimeTableRelations: runtimeTableRelations,
+    runtimeTaskTableRelations: runtimeTaskTableRelations,
+    runtimeLogTableRelations: runtimeLogTableRelations,
   },
 });

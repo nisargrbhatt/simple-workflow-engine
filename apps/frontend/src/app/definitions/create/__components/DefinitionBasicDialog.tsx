@@ -145,7 +145,7 @@ const DefinitionBasicDialog: FC<Props> = () => {
             </form>
           </Form>
           <DialogFooter>
-            <Button type="submit" form="definition-basic-form">
+            <Button type="button" onClick={onSubmit}>
               Submit
             </Button>
           </DialogFooter>

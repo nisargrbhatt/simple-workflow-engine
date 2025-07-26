@@ -1,7 +1,7 @@
 import { db } from '@db/index';
 import { definitionTable } from '@db/schema';
 import { contractOpenSpec } from '@lib/implementor';
-import { safeAsync } from '@lib/safe';
+import { safeAsync } from '@repo/utils';
 import { and, asc, count, desc, eq } from 'drizzle-orm';
 
 export const createDefinition = contractOpenSpec.definition.create.handler(async ({ input, errors }) => {

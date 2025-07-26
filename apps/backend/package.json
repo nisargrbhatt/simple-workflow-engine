@@ -4,23 +4,24 @@
     "dev": "bun run --hot src/index.ts",
     "build": "bun build --compile --minify --sourcemap --target=bun-linux-x64 ./src/index.ts --outfile ./build/backend",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "bun run ./src/db/migrate.ts",
+    "db:migrate": "drizzle-kit migrate",
     "db:seed": "bun run ./src/db/seed.ts"
   },
   "dependencies": {
-    "@neondatabase/serverless": "^1.0.0",
     "@orpc/contract": "catalog:",
     "@orpc/openapi": "catalog:",
     "@orpc/server": "catalog:",
     "@orpc/zod": "catalog:",
+    "@repo/engine": "workspace:*",
     "@repo/orpc": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
     "@repo/utils": "workspace:*",
     "axios": "^1.9.0",
     "dotenv": "^16.5.0",
     "drizzle-orm": "^0.43.1",
     "hono": "^4.8.5",
-    "zod": "catalog:",
-    "@repo/typescript-config": "workspace:*"
+    "postgres": "^3.4.7",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@types/bun": "latest",

@@ -118,7 +118,7 @@ const EndTask: FC<NodeProps<Props>> = ({ data, id, selected }) => {
             </form>
           </Form>
           <DialogFooter>
-            <Button type="submit" form="end-form-config">
+            <Button type="button" onClick={onSubmit}>
               Submit
             </Button>
           </DialogFooter>

@@ -1,0 +1,21 @@
+{
+  "name": "@repo/engine",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "exports": {
+    "./types": "./src/types/index.ts",
+    "./engine": "./src/engine/index.ts",
+    "./persistor":"./src/persistor/index.ts"
+  },
+  "sideEffects": false,
+  "scripts": {},
+  "dependencies": {
+    "zod": "catalog:",
+    "@repo/utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/bun": "latest"
+  }
+}
