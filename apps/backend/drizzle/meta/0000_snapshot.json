@@ -1,5 +1,5 @@
 {
-  "id": "c4fe448c-bb44-4e6e-aa5f-34fb09a77787",
+  "id": "360010c4-e058-446c-9fdd-f18c7f0211b2",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -106,8 +106,8 @@
             "cycle": false
           }
         },
-        "taskName": {
-          "name": "taskName",
+        "taskId": {
+          "name": "taskId",
           "type": "text",
           "primaryKey": false,
           "notNull": true
@@ -136,13 +136,13 @@
           "name": "runtimeId",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "definitionId": {
           "name": "definitionId",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "createdAt": {
           "name": "createdAt",
@@ -152,24 +152,48 @@
           "default": "now()"
         }
       },
-      "indexes": {},
+      "indexes": {
+        "log_runtime_id_idx": {
+          "name": "log_runtime_id_idx",
+          "columns": [
+            {
+              "expression": "runtimeId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {
         "runtime_logs_runtimeId_runtimes_id_fk": {
           "name": "runtime_logs_runtimeId_runtimes_id_fk",
           "tableFrom": "runtime_logs",
           "tableTo": "runtimes",
-          "columnsFrom": ["runtimeId"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
+          "columnsFrom": [
+            "runtimeId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
           "onUpdate": "no action"
         },
         "runtime_logs_definitionId_definitions_id_fk": {
           "name": "runtime_logs_definitionId_definitions_id_fk",
           "tableFrom": "runtime_logs",
           "tableTo": "definitions",
-          "columnsFrom": ["definitionId"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
+          "columnsFrom": [
+            "definitionId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -217,7 +241,7 @@
           "name": "definitionId",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "createdAt": {
           "name": "createdAt",
@@ -233,9 +257,13 @@
           "name": "runtimes_definitionId_definitions_id_fk",
           "tableFrom": "runtimes",
           "tableTo": "definitions",
-          "columnsFrom": ["definitionId"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
+          "columnsFrom": [
+            "definitionId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -266,6 +294,12 @@
             "cycle": false
           }
         },
+        "taskId": {
+          "name": "taskId",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
         "name": {
           "name": "name",
           "type": "varchar",
@@ -284,12 +318,6 @@
           "primaryKey": false,
           "notNull": false
         },
-        "params": {
-          "name": "params",
-          "type": "json",
-          "primaryKey": false,
-          "notNull": false
-        },
         "exec": {
           "name": "exec",
           "type": "varchar",
@@ -302,11 +330,24 @@
           "primaryKey": false,
           "notNull": false
         },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'added'"
+        },
+        "result": {
+          "name": "result",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": false
+        },
         "runtimeId": {
           "name": "runtimeId",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "createdAt": {
           "name": "createdAt",
@@ -316,15 +357,35 @@
           "default": "now()"
         }
       },
-      "indexes": {},
+      "indexes": {
+        "task_runtime_id_idx": {
+          "name": "task_runtime_id_idx",
+          "columns": [
+            {
+              "expression": "runtimeId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {
         "runtime_tasks_runtimeId_runtimes_id_fk": {
           "name": "runtime_tasks_runtimeId_runtimes_id_fk",
           "tableFrom": "runtime_tasks",
           "tableTo": "runtimes",
-          "columnsFrom": ["runtimeId"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
+          "columnsFrom": [
+            "runtimeId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },

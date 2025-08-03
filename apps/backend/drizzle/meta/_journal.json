@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1747464251965,
-      "tag": "0000_slow_hedge_knight",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1753511392793,
-      "tag": "0001_hesitant_silhouette",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1753554728508,
-      "tag": "0002_burly_stone_men",
+      "when": 1754227100973,
+      "tag": "0000_cool_eternals",
       "breakpoints": true
     }
   ]

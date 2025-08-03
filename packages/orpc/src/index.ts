@@ -4,9 +4,10 @@ import {
   fetchEditDefinitionContract,
   deleteDefinitionContract,
   fetchDefinitionContract,
-} from './definition';
-import { processTaskContract, startEngineContract } from './engine';
-import { oc } from '@orpc/contract';
+  updateDefinitionContract,
+} from "./definition";
+import { processTaskContract, startEngineContract } from "./engine";
+import { oc } from "@orpc/contract";
 
 export const contractRouter = {
   engine: oc.router({
@@ -19,5 +20,6 @@ export const contractRouter = {
     fetchEdit: fetchEditDefinitionContract,
     delete: deleteDefinitionContract,
     get: fetchDefinitionContract,
+    edit: updateDefinitionContract,
   }),
 };

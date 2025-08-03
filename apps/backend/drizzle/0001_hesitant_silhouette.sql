@@ -1,1 +1,0 @@
-ALTER TABLE "runtime_tasks" ADD COLUMN "taskId" varchar NOT NULL;
