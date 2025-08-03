@@ -20,6 +20,7 @@ import { useNavigate } from 'react-router';
 import { toast } from 'sonner';
 import { z } from 'zod';
 import { safeSync } from '@repo/utils';
+import { Switch } from '@/components/ui/switch';
 
 type DefinitionObject = NonNullable<ReturnType<typeof useFetchDefinition>['data']>;
 
@@ -28,6 +29,7 @@ const formSchema = z.object({
     const result = safeSync(() => JSON.parse(val));
     return result.success;
   }, 'Invalid JSON'),
+  autoStart: z.boolean(),
 });
 
 interface Props {
@@ -42,6 +44,7 @@ const RunNowAction: FC<Props> = ({ id }) => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       params: '{}',
+      autoStart: false,
     },
   });
 
@@ -50,6 +53,7 @@ const RunNowAction: FC<Props> = ({ id }) => {
       {
         globalParams: JSON.parse(values.params),
         definitionId: id,
+        autoStart: values.autoStart,
       },
       {
         onSuccess: (data) => {
@@ -79,6 +83,21 @@ const RunNowAction: FC<Props> = ({ id }) => {
         <Form {...paramForm}>
           <form onSubmit={onSubmit} noValidate id="run-now-form" className="w-full">
             <div className="flex flex-col items-start justify-start gap-2">
+              <FormField
+                control={paramForm.control}
+                name="autoStart"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                    <div className="space-y-0.5">
+                      <FormLabel>Auto Start</FormLabel>
+                      <FormDescription>Auto start the engine. Else you will have to start it manually.</FormDescription>
+                    </div>
+                    <FormControl>
+                      <Switch checked={field.value} onCheckedChange={field.onChange} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
               <FormField
                 control={paramForm.control}
                 name="params"

@@ -3,7 +3,8 @@ import { contractRouter } from '@repo/orpc';
 import type { HonoRequest } from 'hono';
 
 type HonoContext = {
-  req: HonoRequest;
+  req?: HonoRequest;
+  internal?: boolean;
 };
 
 export const contractOpenSpec = implement(contractRouter).$context<HonoContext>();

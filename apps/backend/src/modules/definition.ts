@@ -3,12 +3,32 @@ import { definitionTable } from '@db/schema';
 import { contractOpenSpec } from '@lib/implementor';
 import { safeAsync } from '@repo/utils';
 import { and, asc, count, desc, eq } from 'drizzle-orm';
+import { definitionTaskList } from '@repo/engine/types';
 
 export const createDefinition = contractOpenSpec.definition.create.handler(async ({ input, errors }) => {
+  const parsedTask = definitionTaskList.safeParse(input.tasks);
+
+  if (!parsedTask.success) {
+    throw errors.BAD_REQUEST({
+      message: 'Invalid task list',
+    });
+  }
+
   const createdDefinitionResult = await safeAsync(
-    db.insert(definitionTable).values(input).returning({
-      id: definitionTable.id,
-    })
+    db
+      .insert(definitionTable)
+      .values({
+        name: input.name,
+        description: input.description,
+        tasks: parsedTask.data,
+        global: input.global,
+        status: input.status,
+        type: input.type,
+        uiObject: input.uiObject,
+      })
+      .returning({
+        id: definitionTable.id,
+      })
   );
 
   if (!createdDefinitionResult.success) {

@@ -15,6 +15,7 @@ const definitionStartTask = z.object({
       RUNTIME_TASK_STATUS.failed,
     ])
     .default(RUNTIME_TASK_STATUS.added),
+  result: z.any().default({}),
 });
 
 const definitionEndTask = z.object({
@@ -31,6 +32,7 @@ const definitionEndTask = z.object({
       RUNTIME_TASK_STATUS.failed,
     ])
     .default(RUNTIME_TASK_STATUS.added),
+  result: z.any().default({}),
 });
 
 const definitionFunctionTask = z.object({
@@ -48,6 +50,7 @@ const definitionFunctionTask = z.object({
       RUNTIME_TASK_STATUS.failed,
     ])
     .default(RUNTIME_TASK_STATUS.added),
+  result: z.any().default({}),
 });
 
 const definitionGuardTask = z.object({
@@ -65,6 +68,7 @@ const definitionGuardTask = z.object({
       RUNTIME_TASK_STATUS.failed,
     ])
     .default(RUNTIME_TASK_STATUS.added),
+  result: z.any().default({}),
 });
 
 const definitionWaitTask = z.object({
@@ -81,6 +85,7 @@ const definitionWaitTask = z.object({
       RUNTIME_TASK_STATUS.failed,
     ])
     .default(RUNTIME_TASK_STATUS.added),
+  result: z.any().default({}),
 });
 
 const definitionListenTask = z.object({
@@ -97,6 +102,7 @@ const definitionListenTask = z.object({
       RUNTIME_TASK_STATUS.failed,
     ])
     .default(RUNTIME_TASK_STATUS.added),
+  result: z.any().default({}),
 });
 
 export const definitionTask = z.discriminatedUnion('type', [

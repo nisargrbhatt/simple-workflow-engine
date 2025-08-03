@@ -6,11 +6,12 @@ import {
   fetchEditDefinition,
   listDefinition,
 } from '@modules/definition';
-import { startEngine } from '@modules/engine';
+import { processTask, startEngine } from '@modules/engine';
 
 export const router = contractOpenSpec.router({
   engine: {
     start: startEngine,
+    process: processTask,
   },
   definition: {
     create: createDefinition,

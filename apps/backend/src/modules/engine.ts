@@ -1,9 +1,12 @@
 import { db } from '@db/index';
 import { definitionTable, runtimeTable, runtimeTaskTable } from '@db/schema';
+import { DbPostgresPersistor } from '@engine/postgres';
 import { contractOpenSpec } from '@lib/implementor';
+import { internalAuth } from '@lib/procedures';
+import { Engine } from '@repo/engine/engine';
 import { definitionTaskList } from '@repo/engine/types';
 import { safeAsync } from '@repo/utils';
-import { and, eq } from 'drizzle-orm';
+import { and, eq, not } from 'drizzle-orm';
 
 export const startEngine = contractOpenSpec.engine.start.handler(async ({ input, errors }) => {
   const definitionResult = await safeAsync(
@@ -38,6 +41,7 @@ export const startEngine = contractOpenSpec.engine.start.handler(async ({ input,
     next: i.next,
     previous: i.previous,
     exec: i.type === 'FUNCTION' || i.type === 'GUARD' ? i.exec : '',
+    status: i.status ?? 'added',
   }));
 
   const definitionGlobalMap = new Map<string, string>();
@@ -85,6 +89,22 @@ export const startEngine = contractOpenSpec.engine.start.handler(async ({ input,
     });
   }
 
+  if (input.autoStart === true) {
+    const startTaskId = dbTaskRecord.find((i) => i.type === 'START')?.taskId;
+    if (!startTaskId) {
+      throw errors.BAD_REQUEST({
+        message: "Can't find start task in definition",
+      });
+    }
+
+    await safeAsync(
+      processTask({
+        runtimeId: transactionResult.data?.createdRuntimeId,
+        taskId: startTaskId,
+      })
+    );
+  }
+
   return {
     data: {
       id: transactionResult.data?.createdRuntimeId,
@@ -92,3 +112,83 @@ export const startEngine = contractOpenSpec.engine.start.handler(async ({ input,
     message: 'Runtime Engine created successfully',
   };
 });
+
+export const processTask = contractOpenSpec.engine.process
+  .use(internalAuth)
+  .handler(async ({ input, errors }) => {
+    const runtimeResult = await safeAsync(
+      db.query.runtime.findFirst({
+        where: and(eq(runtimeTable.id, input.runtimeId), not(eq(runtimeTable.workflowStatus, 'completed'))),
+        columns: {
+          id: true,
+        },
+      })
+    );
+
+    if (!runtimeResult.success) {
+      console.error(runtimeResult.error);
+      throw errors.INTERNAL_SERVER_ERROR({
+        message: 'Internal Server Error',
+      });
+    }
+
+    if (!runtimeResult.data) {
+      throw errors.BAD_REQUEST({
+        message: 'Runtime not found',
+      });
+    }
+
+    const runtimeId = runtimeResult.data.id;
+
+    const taskResult = await safeAsync(
+      db.query.runtimeTask.findFirst({
+        where: and(
+          eq(runtimeTaskTable.runtimeId, runtimeId),
+          eq(runtimeTaskTable.taskId, input.taskId),
+          not(eq(runtimeTaskTable.status, 'completed'))
+        ),
+        columns: {
+          id: true,
+          taskId: true,
+        },
+      })
+    );
+
+    if (!taskResult.success) {
+      console.error(taskResult.error);
+      throw errors.INTERNAL_SERVER_ERROR({
+        message: 'Internal Server Error',
+      });
+    }
+
+    if (!taskResult.data) {
+      throw errors.BAD_REQUEST({
+        message: 'Task not found',
+      });
+    }
+
+    const taskId = taskResult.data.taskId;
+
+    const persistor = new DbPostgresPersistor();
+
+    const engine = new Engine(persistor);
+
+    try {
+      await engine.setup(runtimeId);
+      await engine.process(taskId);
+    } catch (error) {
+      console.error(error);
+      throw errors.INTERNAL_SERVER_ERROR({
+        message: 'Internal Server Error',
+      });
+    }
+
+    return {
+      message: 'Task processing started successfully',
+    };
+  })
+  .callable({
+    context: {
+      internal: true,
+    },
+  });

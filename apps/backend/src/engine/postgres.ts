@@ -1,30 +1,40 @@
 import { db } from '@db/index';
-import { runtimeLogTable, runtimeTaskTable } from '@db/schema';
-import { getRuntimeInfo } from '@db/statements';
+import { runtimeLogTable, runtimeTable, runtimeTaskTable } from '@db/schema';
+import { getRuntimeInfo, getRuntimeTaskList } from '@db/statements';
 import { WorkflowPersistor } from '@repo/engine/persistor';
-import { type LogEntry, type RUNTIME_TASK_STATUS, type RuntimeInfo, definitionTaskList } from '@repo/engine/types';
+import {
+  type LogEntry,
+  type RUNTIME_TASK_STATUS,
+  type RuntimeInfo,
+  type WORKFLOW_STATUS,
+  definitionTaskList,
+} from '@repo/engine/types';
 import { and, eq } from 'drizzle-orm';
+import { env } from 'bun';
+import { processTask } from '@modules/engine';
 
 export class DbPostgresPersistor extends WorkflowPersistor {
   async getRuntime(runtimeId: number): Promise<RuntimeInfo> {
-    const runtimeTimeInfo = await getRuntimeInfo.execute({ id: runtimeId });
+    const runtimeInfo = await getRuntimeInfo.execute({ id: runtimeId });
 
-    if (!runtimeTimeInfo) {
+    if (!runtimeInfo) {
       throw new Error('Runtime not found');
     }
 
+    const runtimeTasks = await getRuntimeTaskList.execute({ runtimeId });
+
     const tasks = definitionTaskList.parse(
-      runtimeTimeInfo.tasks?.map((i) => ({
+      runtimeTasks?.map((i) => ({
         ...i,
         id: i.taskId,
       }))
     );
 
     return {
-      id: runtimeTimeInfo.id,
-      global: runtimeTimeInfo.global ?? {},
-      workflowStatus: runtimeTimeInfo.workflowStatus ?? 'added',
-      definitionId: runtimeTimeInfo.definitionId,
+      id: runtimeInfo.id,
+      global: runtimeInfo.global ?? {},
+      workflowStatus: runtimeInfo.workflowStatus ?? 'added',
+      definitionId: runtimeInfo.definitionId,
       tasks: tasks,
     };
   }
@@ -57,5 +67,24 @@ export class DbPostgresPersistor extends WorkflowPersistor {
     }
 
     await db.insert(runtimeLogTable).values(logs);
+  }
+
+  async updateRuntimeStatus(
+    runtimeId: number,
+    status: (typeof WORKFLOW_STATUS)[keyof typeof WORKFLOW_STATUS]
+  ): Promise<void> {
+    await db
+      .update(runtimeTable)
+      .set({
+        workflowStatus: status,
+      })
+      .where(eq(runtimeTable.id, runtimeId));
+  }
+
+  async nextTaskCaller(runtimeId: number, taskId: string): Promise<void> {
+    await processTask({
+      runtimeId,
+      taskId,
+    });
   }
 }

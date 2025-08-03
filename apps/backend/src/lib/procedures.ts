@@ -4,14 +4,19 @@ import type { HonoRequest } from 'hono';
 import { env } from 'bun';
 
 type HonoContext = {
-  req: HonoRequest;
+  internal?: boolean;
+  req?: HonoRequest;
 };
 
 const internalApiKey = env.SERVER_KEY;
 
 export const internalAuth = oo.spec(
   os.$context<HonoContext>().middleware(({ context, next }) => {
-    const apiKey = context.req.header('x-api-key');
+    if (context?.internal === true) {
+      return next();
+    }
+
+    const apiKey = context?.req?.header('x-api-key');
 
     if (!apiKey) {
       throw new ORPCError('UNAUTHORIZED', {
@@ -34,7 +39,11 @@ export const internalAuth = oo.spec(
 
 export const privateAuth = oo.spec(
   os.$context<HonoContext>().middleware(({ context, next }) => {
-    const authHeader = context.req.header('authorization')?.split(' ')?.at(1);
+    if (context?.internal === true) {
+      return next();
+    }
+
+    const authHeader = context?.req?.header('authorization')?.split(' ')?.at(1);
 
     if (!authHeader) {
       throw new ORPCError('UNAUTHORIZED', {

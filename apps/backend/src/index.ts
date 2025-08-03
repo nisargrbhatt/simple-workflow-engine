@@ -45,7 +45,7 @@ const html = `
     </html>
   `;
 
-app.use(async (c, next) => {
+app.use(async (c) => {
   const { matched, response } = await openAPIHandler.handle(c.req.raw, {
     prefix: '/rpc',
     context: {

@@ -1,10 +1,11 @@
 import type { LogPersistor } from '../../persistor/log';
 import type { DefinitionTask, ProcessorResult } from '../../types/index';
+import { WorkflowVM } from '../vm';
 
-export class StartProcessor {
+export class FunctionProcessor {
   constructor(
     public params: {
-      task: Extract<DefinitionTask, { type: 'START' }>;
+      task: Extract<DefinitionTask, { type: 'FUNCTION' }>;
       global: Record<string, any>;
       taskResults: Record<string, any>;
       logger: LogPersistor;
@@ -12,9 +13,12 @@ export class StartProcessor {
   ) {}
 
   async process(): Promise<ProcessorResult<Record<string, any>>> {
-    return {
-      result: {},
-      timeTaken: 0,
-    };
+    const exec = this.params.task.exec;
+
+    const workflowVM = new WorkflowVM(this.params.logger, this.params.global, this.params.taskResults);
+
+    const result = await workflowVM.process(exec);
+
+    return result;
   }
 }

@@ -11,4 +11,5 @@ export interface RuntimeInfo {
 
 export interface ProcessorResult<T = any> {
   result: T;
+  timeTaken: number;
 }

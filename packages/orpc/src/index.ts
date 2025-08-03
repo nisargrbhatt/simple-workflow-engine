@@ -5,12 +5,13 @@ import {
   deleteDefinitionContract,
   fetchDefinitionContract,
 } from './definition';
-import { startEngineContract } from './engine';
+import { processTaskContract, startEngineContract } from './engine';
 import { oc } from '@orpc/contract';
 
 export const contractRouter = {
   engine: oc.router({
     start: startEngineContract,
+    process: processTaskContract,
   }),
   definition: oc.router({
     create: createDefinitionContract,
