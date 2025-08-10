@@ -5,9 +5,10 @@ import {
   deleteDefinitionContract,
   fetchDefinitionContract,
   updateDefinitionContract,
-} from "./definition";
-import { processTaskContract, startEngineContract } from "./engine";
-import { oc } from "@orpc/contract";
+} from './definition';
+import { processTaskContract, startEngineContract } from './engine';
+import { oc } from '@orpc/contract';
+import { getRuntimeContract, listRuntimeContract } from './runtime';
 
 export const contractRouter = {
   engine: oc.router({
@@ -21,5 +22,9 @@ export const contractRouter = {
     delete: deleteDefinitionContract,
     get: fetchDefinitionContract,
     edit: updateDefinitionContract,
+  }),
+  runtime: oc.router({
+    list: listRuntimeContract,
+    get: getRuntimeContract,
   }),
 };

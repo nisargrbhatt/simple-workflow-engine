@@ -4,7 +4,6 @@ import { CORSPlugin } from '@orpc/server/plugins';
 import { ZodToJsonSchemaConverter } from '@orpc/zod';
 import { OpenAPIGenerator } from '@orpc/openapi';
 import { OpenAPIHandler } from '@orpc/openapi/fetch';
-import { env } from 'bun';
 
 const app = new Hono();
 
@@ -87,5 +86,5 @@ app.use(async (c) => {
 
 export default {
   fetch: app.fetch,
-  port: env?.['PORT'] ?? 3000,
+  port: process.env.PORT ?? 3000,
 };

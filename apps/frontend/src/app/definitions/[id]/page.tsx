@@ -2,6 +2,7 @@ import { useFetchDefinition } from '@/api/query/fetchDefinition';
 import { useEffect, type FC } from 'react';
 import { Navigate, useParams } from 'react-router';
 import RunNowAction from './__components/RunNowAction';
+import RuntimeList from './__components/RuntimeList';
 
 interface Props {}
 
@@ -34,6 +35,7 @@ const DefinitionDetailPage: FC<Props> = () => {
       </h1>
       <p className="text-foreground max-w-2xl text-base font-light sm:text-lg">{data?.description}</p>
       <RunNowAction id={data?.id} />
+      <RuntimeList id={id} />
     </div>
   );
 };

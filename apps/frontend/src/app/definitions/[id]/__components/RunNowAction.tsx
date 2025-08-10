@@ -19,8 +19,11 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 import { toast } from 'sonner';
 import { z } from 'zod';
-import { safeSync } from '@repo/utils';
+import { safeAsync, safeSync } from '@repo/utils';
 import { Switch } from '@/components/ui/switch';
+import { useQueryClient } from '@tanstack/react-query';
+import { queryKey } from '@/api/query/listRuntime';
+import { useTheme } from '@/contexts/ThemeContext';
 
 type DefinitionObject = NonNullable<ReturnType<typeof useFetchDefinition>['data']>;
 
@@ -37,8 +40,10 @@ interface Props {
 }
 
 const RunNowAction: FC<Props> = ({ id }) => {
+  const { theme } = useTheme();
   const runDefinition = useRunDefinitionMutation();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const paramForm = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -61,6 +66,11 @@ const RunNowAction: FC<Props> = ({ id }) => {
           if (typeof data?.data?.id === 'number') {
             navigate(`/runtime/${data?.data?.id}`);
           }
+          safeAsync(
+            queryClient.invalidateQueries({
+              queryKey: [queryKey],
+            })
+          );
         },
         onError: (error) => {
           console.error(error);
@@ -116,6 +126,7 @@ const RunNowAction: FC<Props> = ({ id }) => {
                             enabled: false,
                           },
                         }}
+                        theme={theme === 'light' ? 'light' : 'vs-dark'}
                         language="json"
                       />
                     </FormControl>

@@ -1,14 +1,13 @@
 import { oo } from '@orpc/openapi';
 import { ORPCError, os } from '@orpc/server';
 import type { HonoRequest } from 'hono';
-import { env } from 'bun';
 
 type HonoContext = {
   internal?: boolean;
   req?: HonoRequest;
 };
 
-const internalApiKey = env.SERVER_KEY;
+const internalApiKey = process.env.SERVER_KEY;
 
 export const internalAuth = oo.spec(
   os.$context<HonoContext>().middleware(({ context, next }) => {

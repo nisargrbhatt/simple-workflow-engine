@@ -10,7 +10,6 @@ import {
   definitionTaskList,
 } from '@repo/engine/types';
 import { and, eq } from 'drizzle-orm';
-import { env } from 'bun';
 import { processTask } from '@modules/engine';
 
 export class DbPostgresPersistor extends WorkflowPersistor {

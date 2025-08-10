@@ -1,135 +1,124 @@
-import { db } from "@db/index";
-import { definitionTable, runtimeTable, runtimeTaskTable } from "@db/schema";
-import { DbPostgresPersistor } from "@engine/postgres";
-import { contractOpenSpec } from "@lib/implementor";
-import { internalAuth } from "@lib/procedures";
-import { Engine } from "@repo/engine/engine";
-import { definitionTaskList } from "@repo/engine/types";
-import { safeAsync } from "@repo/utils";
-import { and, eq, not } from "drizzle-orm";
+import { db } from '@db/index';
+import { definitionTable, runtimeTable, runtimeTaskTable } from '@db/schema';
+import { DbPostgresPersistor } from '@engine/postgres';
+import { contractOpenSpec } from '@lib/implementor';
+import { internalAuth } from '@lib/procedures';
+import { Engine } from '@repo/engine/engine';
+import { definitionTaskList } from '@repo/engine/types';
+import { safeAsync } from '@repo/utils';
+import { and, eq, not } from 'drizzle-orm';
 
-export const startEngine = contractOpenSpec.engine.start.handler(
-  async ({ input, errors }) => {
-    const definitionResult = await safeAsync(
-      db.query.definition.findFirst({
-        where: and(
-          eq(definitionTable.id, input.definitionId),
-          eq(definitionTable.type, "definition"),
-          eq(definitionTable.status, "active")
-        ),
-      })
-    );
+export const startEngine = contractOpenSpec.engine.start.handler(async ({ input, errors }) => {
+  const definitionResult = await safeAsync(
+    db.query.definition.findFirst({
+      where: and(
+        eq(definitionTable.id, input.definitionId),
+        eq(definitionTable.type, 'definition'),
+        eq(definitionTable.status, 'active')
+      ),
+    })
+  );
 
-    if (!definitionResult.success) {
-      console.error("Definition findFirst failed", definitionResult.error);
-      throw errors.INTERNAL_SERVER_ERROR({
-        message: "Internal server error",
-      });
-    }
-
-    if (!definitionResult.data) {
-      throw errors.BAD_REQUEST({
-        message: "Definition not found",
-      });
-    }
-
-    const definitionTasks = definitionTaskList.parse(
-      definitionResult.data.tasks ?? []
-    );
-
-    const dbTaskRecord = definitionTasks.map((i) => ({
-      taskId: i.id,
-      name: i.name,
-      type: i.type,
-      next: i.next,
-      previous: i.previous,
-      exec: i.type === "FUNCTION" || i.type === "GUARD" ? i.exec : "",
-      status: i.status ?? "added",
-    }));
-
-    const definitionGlobalMap = new Map<string, string>();
-
-    definitionResult.data.global?.forEach((gVal) => {
-      definitionGlobalMap.set(gVal.key, gVal.value);
+  if (!definitionResult.success) {
+    console.error('Definition findFirst failed', definitionResult.error);
+    throw errors.INTERNAL_SERVER_ERROR({
+      message: 'Internal server error',
     });
+  }
 
-    const transactionResult = await safeAsync(
-      db.transaction(async (tx) => {
-        const createdRuntime = await tx
-          .insert(runtimeTable)
-          .values({
-            global: {
-              ...Object.fromEntries(definitionGlobalMap.entries()),
-              ...(input?.globalParams ?? {}),
-            },
-            workflowStatus: "added",
-            definitionId: input.definitionId,
-          })
-          .returning({
-            id: runtimeTable.id,
-          });
+  if (!definitionResult.data) {
+    throw errors.BAD_REQUEST({
+      message: 'Definition not found',
+    });
+  }
 
-        const createdRuntimeId = createdRuntime?.at(0)?.id;
+  const definitionTasks = definitionTaskList.parse(definitionResult.data.tasks ?? []);
 
-        if (typeof createdRuntimeId !== "number") {
-          throw errors.BAD_REQUEST({
-            message: "Can't start engine",
-          });
-        }
+  const dbTaskRecord = definitionTasks.map((i) => ({
+    taskId: i.id,
+    name: i.name,
+    type: i.type,
+    next: i.next,
+    previous: i.previous,
+    exec: i.type === 'FUNCTION' || i.type === 'GUARD' ? i.exec : '',
+    status: i.status ?? 'added',
+  }));
 
-        await tx
-          .insert(runtimeTaskTable)
-          .values(
-            dbTaskRecord.map((i) => ({ ...i, runtimeId: createdRuntimeId }))
-          );
+  const definitionGlobalMap = new Map<string, string>();
 
-        return {
-          createdRuntimeId,
-        };
-      })
-    );
+  definitionResult.data.global?.forEach((gVal) => {
+    definitionGlobalMap.set(gVal.key, gVal.value);
+  });
 
-    if (!transactionResult.success) {
-      console.error("Transaction failed", transactionResult.error);
-      throw errors.INTERNAL_SERVER_ERROR({
-        message: "Internal server error",
-      });
-    }
+  const transactionResult = await safeAsync(
+    db.transaction(async (tx) => {
+      const createdRuntime = await tx
+        .insert(runtimeTable)
+        .values({
+          global: {
+            ...Object.fromEntries(definitionGlobalMap.entries()),
+            ...(input?.globalParams ?? {}),
+          },
+          workflowStatus: 'added',
+          definitionId: input.definitionId,
+        })
+        .returning({
+          id: runtimeTable.id,
+        });
 
-    if (input.autoStart === true) {
-      const startTaskId = dbTaskRecord.find((i) => i.type === "START")?.taskId;
-      if (!startTaskId) {
+      const createdRuntimeId = createdRuntime?.at(0)?.id;
+
+      if (typeof createdRuntimeId !== 'number') {
         throw errors.BAD_REQUEST({
-          message: "Can't find start task in definition",
+          message: "Can't start engine",
         });
       }
 
-      await safeAsync(
-        processTask({
-          runtimeId: transactionResult.data?.createdRuntimeId,
-          taskId: startTaskId,
-        })
-      );
+      await tx.insert(runtimeTaskTable).values(dbTaskRecord.map((i) => ({ ...i, runtimeId: createdRuntimeId })));
+
+      return {
+        createdRuntimeId,
+      };
+    })
+  );
+
+  if (!transactionResult.success) {
+    console.error('Transaction failed', transactionResult.error);
+    throw errors.INTERNAL_SERVER_ERROR({
+      message: 'Internal server error',
+    });
+  }
+
+  if (input.autoStart === true) {
+    const startTaskId = dbTaskRecord.find((i) => i.type === 'START')?.taskId;
+    if (!startTaskId) {
+      throw errors.BAD_REQUEST({
+        message: "Can't find start task in definition",
+      });
     }
 
-    return {
-      data: {
-        id: transactionResult.data?.createdRuntimeId,
-      },
-      message: "Runtime Engine created successfully",
-    };
+    await safeAsync(
+      processTask({
+        runtimeId: transactionResult.data?.createdRuntimeId,
+        taskId: startTaskId,
+      })
+    );
   }
-);
+
+  return {
+    data: {
+      id: transactionResult.data?.createdRuntimeId,
+    },
+    message: 'Runtime Engine created successfully',
+  };
+});
 
 export const processTask = contractOpenSpec.engine.process
   .use(internalAuth)
   .handler(async ({ input, errors }) => {
     const runtimeResult = await safeAsync(
       db.query.runtime.findFirst({
-        where: and(
-          eq(runtimeTable.id, input.runtimeId),
-          not(eq(runtimeTable.workflowStatus, "completed"))
-        ),
+        where: and(eq(runtimeTable.id, input.runtimeId), not(eq(runtimeTable.workflowStatus, 'completed'))),
         columns: {
           id: true,
         },
@@ -139,13 +128,13 @@ export const processTask = contractOpenSpec.engine.process
     if (!runtimeResult.success) {
       console.error(runtimeResult.error);
       throw errors.INTERNAL_SERVER_ERROR({
-        message: "Internal Server Error",
+        message: 'Internal Server Error',
       });
     }
 
     if (!runtimeResult.data) {
       throw errors.BAD_REQUEST({
-        message: "Runtime not found",
+        message: 'Runtime not found',
       });
     }
 
@@ -156,7 +145,7 @@ export const processTask = contractOpenSpec.engine.process
         where: and(
           eq(runtimeTaskTable.runtimeId, runtimeId),
           eq(runtimeTaskTable.taskId, input.taskId),
-          not(eq(runtimeTaskTable.status, "completed"))
+          not(eq(runtimeTaskTable.status, 'completed'))
         ),
         columns: {
           id: true,
@@ -168,13 +157,13 @@ export const processTask = contractOpenSpec.engine.process
     if (!taskResult.success) {
       console.error(taskResult.error);
       throw errors.INTERNAL_SERVER_ERROR({
-        message: "Internal Server Error",
+        message: 'Internal Server Error',
       });
     }
 
     if (!taskResult.data) {
       throw errors.BAD_REQUEST({
-        message: "Task not found",
+        message: 'Task not found',
       });
     }
 
@@ -190,12 +179,12 @@ export const processTask = contractOpenSpec.engine.process
     } catch (error) {
       console.error(error);
       throw errors.INTERNAL_SERVER_ERROR({
-        message: "Internal Server Error",
+        message: 'Internal Server Error',
       });
     }
 
     return {
-      message: "Task processing started successfully",
+      message: 'Task processing started successfully',
     };
   })
   .callable({

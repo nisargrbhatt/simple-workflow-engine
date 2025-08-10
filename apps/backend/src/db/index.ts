@@ -9,10 +9,9 @@ import {
   runtimeTaskTable,
   runtimeTaskTableRelations,
 } from './schema';
-import { env } from 'bun';
 import postgres from 'postgres';
 
-const dbUrl = env.DATABASE_URL!;
+const dbUrl = process.env.DATABASE_URL!;
 
 const sql = postgres(dbUrl);
 

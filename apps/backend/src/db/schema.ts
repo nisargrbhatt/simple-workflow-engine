@@ -14,14 +14,16 @@ export const definitionTable = pgTable('definitions', {
   description: varchar().notNull(),
   type: text({
     enum: ['template', 'definition'],
-  }).default('definition'),
+  })
+    .default('definition')
+    .notNull(),
   global: json().$type<Array<{ key: string; value: string }>>(),
   status: text({ enum: ['active', 'inactive'] })
     .default('active')
     .notNull(),
   uiObject: json(),
   tasks: json().$type<Array<DefinitionTask>>().notNull(),
-  createdAt: date().defaultNow(),
+  createdAt: date().defaultNow().notNull(),
 });
 
 export const definitionTableRelations = relations(definitionTable, ({ many }) => ({
@@ -41,14 +43,16 @@ export const runtimeTable = pgTable('runtimes', {
   global: json().$type<Record<string, any>>(),
   workflowStatus: text({
     enum: [WORKFLOW_STATUS.added, WORKFLOW_STATUS.pending, WORKFLOW_STATUS.completed, WORKFLOW_STATUS.failed],
-  }).default(WORKFLOW_STATUS.added),
+  })
+    .default(WORKFLOW_STATUS.added)
+    .notNull(),
 
   definitionId: integer()
     .references(() => definitionTable.id, {
       onDelete: 'cascade',
     })
     .notNull(),
-  createdAt: date().defaultNow(),
+  createdAt: date().defaultNow().notNull(),
 });
 
 export const runtimeTableRelations = relations(runtimeTable, ({ many, one }) => ({
@@ -76,7 +80,7 @@ export const runtimeTaskTable = pgTable(
     exec: varchar(),
     type: text({
       enum: [TASK_TYPE.START, TASK_TYPE.END, TASK_TYPE.GUARD, TASK_TYPE.FUNCTION, TASK_TYPE.WAIT, TASK_TYPE.LISTEN],
-    }),
+    }).notNull(),
     status: text({
       enum: [
         RUNTIME_TASK_STATUS.added,
@@ -93,7 +97,7 @@ export const runtimeTaskTable = pgTable(
         onDelete: 'cascade',
       })
       .notNull(),
-    createdAt: date().defaultNow(),
+    createdAt: date().defaultNow().notNull(),
   },
   (table) => [index('task_runtime_id_idx').on(table.runtimeId)]
 );
@@ -126,7 +130,7 @@ export const runtimeLogTable = pgTable(
         onDelete: 'cascade',
       })
       .notNull(),
-    createdAt: date().defaultNow(),
+    createdAt: date().defaultNow().notNull(),
   },
   (table) => [index('log_runtime_id_idx').on(table.runtimeId)]
 );

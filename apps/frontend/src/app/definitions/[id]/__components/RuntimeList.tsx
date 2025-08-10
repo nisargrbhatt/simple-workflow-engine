@@ -1,0 +1,55 @@
+import { useListRuntime } from '@/api/query/listRuntime';
+import SimplePagination from '@/components/helpers/SimplePagination';
+import { useEffect, type FC } from 'react';
+import RuntimeCard from './RuntimeCard';
+
+interface Props {
+  /**
+   * Definition ID
+   */
+  id: string;
+}
+
+const RuntimeList: FC<Props> = ({ id }) => {
+  const { query, setPaginationState } = useListRuntime(id);
+  const { data, isLoading, error } = query;
+
+  useEffect(() => {
+    if (error) {
+      console.error(error);
+    }
+  }, [error]);
+
+  return (
+    <div className="flex w-full flex-col items-start justify-start gap-2">
+      {isLoading ? <p className="w-full text-center">Loading...</p> : null}
+      {data && !isLoading ? (
+        <div className="grid w-full grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3">
+          {data?.list?.map((i) => (
+            <RuntimeCard key={i.id} id={i.id} workflowStatus={i.workflowStatus} createdAt={i.createdAt} />
+          ))}
+        </div>
+      ) : null}
+      {!isLoading && (!data || data?.list?.length < 1) ? <p className="w-full text-center">No runtimes found</p> : null}
+      {data ? (
+        <div className="flex w-full flex-row items-center justify-center">
+          <SimplePagination
+            pagination={{
+              page: data?.pagination?.page,
+              size: data?.pagination?.size,
+              total: data?.pagination?.total,
+            }}
+            onChange={(page) => {
+              setPaginationState((prev) => ({
+                ...prev,
+                page: page,
+              }));
+            }}
+          />
+        </div>
+      ) : null}
+    </div>
+  );
+};
+
+export default RuntimeList;

@@ -1,5 +1,6 @@
 {
   "name": "workflow-engine-mono",
+  "license": "MIT",
   "devDependencies": {
     "@biomejs/biome": "2.1.2",
     "turbo": "^2.5.5",

@@ -1,4 +1,4 @@
-import { contractOpenSpec } from "@lib/implementor";
+import { contractOpenSpec } from '@lib/implementor';
 import {
   createDefinition,
   deleteDefinition,
@@ -6,8 +6,9 @@ import {
   fetchDefinition,
   fetchEditDefinition,
   listDefinition,
-} from "@modules/definition";
-import { processTask, startEngine } from "@modules/engine";
+} from '@modules/definition';
+import { processTask, startEngine } from '@modules/engine';
+import { getRuntime, listRuntime } from '@modules/runtime';
 
 export const router = contractOpenSpec.router({
   engine: {
@@ -21,5 +22,9 @@ export const router = contractOpenSpec.router({
     delete: deleteDefinition,
     get: fetchDefinition,
     edit: editDefinition,
+  },
+  runtime: {
+    list: listRuntime,
+    get: getRuntime,
   },
 });

@@ -1,6 +1,6 @@
-import { safeAsync } from "@repo/utils";
-import type { LogPersistor } from "../../persistor/log";
-import vm from "node:vm";
+import { safeAsync } from '@repo/utils';
+import type { LogPersistor } from '../../persistor/log';
+import vm from 'node:vm';
 
 export class WorkflowVM {
   constructor(
@@ -19,14 +19,10 @@ export class WorkflowVM {
 
     const context = vm.createContext({
       console: {
-        log: (...args: any[]) =>
-          this.logger.add({ severity: "log", log: args }),
-        info: (...args: any[]) =>
-          this.logger.add({ severity: "info", log: args }),
-        warn: (...args: any[]) =>
-          this.logger.add({ severity: "warn", log: args }),
-        error: (...args: any[]) =>
-          this.logger.add({ severity: "error", log: args }),
+        log: (...args: any[]) => this.logger.add({ severity: 'log', log: args }),
+        info: (...args: any[]) => this.logger.add({ severity: 'info', log: args }),
+        warn: (...args: any[]) => this.logger.add({ severity: 'warn', log: args }),
+        error: (...args: any[]) => this.logger.add({ severity: 'error', log: args }),
       },
       workflowGlobal: this.globalValue,
       workflowResults: this.taskResults,
@@ -47,7 +43,7 @@ export class WorkflowVM {
     );
 
     if (!evalResult.success) {
-      console.error("Eval failed", evalResult.error);
+      console.error('Eval failed', evalResult.error);
       const tock = performance.now();
       const timeTaken = (tock - tick) / 1000;
       return {
