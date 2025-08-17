@@ -7,6 +7,7 @@ import DefinitionsPage from './app/definitions/page';
 import { Layout } from './components/layout/Layout';
 import CreateDefinitionPage from './app/definitions/create/page';
 import DefinitionDetailPage from './app/definitions/[id]/page';
+import RuntimeDetailPage from './app/runtime/[id]/page';
 
 const router = createBrowserRouter([
   {
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
       {
         path: 'definitions/:id',
         element: <DefinitionDetailPage />,
+      },
+      {
+        path: 'runtime/:id',
+        element: <RuntimeDetailPage />,
       },
     ],
   },

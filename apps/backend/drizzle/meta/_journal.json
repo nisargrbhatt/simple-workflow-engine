@@ -8,6 +8,13 @@
       "when": 1754227100973,
       "tag": "0000_cool_eternals",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1755444310742,
+      "tag": "0001_strange_talisman",
+      "breakpoints": true
     }
   ]
 }

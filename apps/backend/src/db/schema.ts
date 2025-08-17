@@ -119,7 +119,9 @@ export const runtimeLogTable = pgTable(
     log: text().default(''),
     severity: text({
       enum: [RUNTIME_LOG_TYPE.log, RUNTIME_LOG_TYPE.info, RUNTIME_LOG_TYPE.warn, RUNTIME_LOG_TYPE.error],
-    }).default('log'),
+    })
+      .default('log')
+      .notNull(),
     runtimeId: integer()
       .references(() => runtimeTable.id, {
         onDelete: 'cascade',

@@ -84,7 +84,4 @@ app.use(async (c) => {
   return c.html(html);
 });
 
-export default {
-  fetch: app.fetch,
-  port: process.env.PORT ?? 3000,
-};
+export default app;

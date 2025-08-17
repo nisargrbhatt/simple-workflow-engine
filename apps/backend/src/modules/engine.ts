@@ -2,7 +2,6 @@ import { db } from '@db/index';
 import { definitionTable, runtimeTable, runtimeTaskTable } from '@db/schema';
 import { DbPostgresPersistor } from '@engine/postgres';
 import { contractOpenSpec } from '@lib/implementor';
-import { internalAuth } from '@lib/procedures';
 import { Engine } from '@repo/engine/engine';
 import { definitionTaskList } from '@repo/engine/types';
 import { safeAsync } from '@repo/utils';
@@ -114,7 +113,6 @@ export const startEngine = contractOpenSpec.engine.start.handler(async ({ input,
 });
 
 export const processTask = contractOpenSpec.engine.process
-  .use(internalAuth)
   .handler(async ({ input, errors }) => {
     const runtimeResult = await safeAsync(
       db.query.runtime.findFirst({

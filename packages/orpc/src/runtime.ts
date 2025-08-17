@@ -65,6 +65,38 @@ export const getRuntimeContract = oc
         workflowStatus: z.enum(['added', 'pending', 'completed', 'failed']).describe('Runtime status'),
         createdAt: z.string().describe('Runtime created at'),
         global: z.record(z.string(), z.any()).nullish(),
+        definition: z.object({
+          id: z.number().describe('Definition Id'),
+          name: z.string().describe('Definition Name'),
+          description: z.string().describe('Definition Description'),
+          status: z.enum(['active', 'inactive']).describe('Definition Status'),
+          createdAt: z.string().nullish().describe('Definition Created At'),
+        }),
+        runtimeTasks: z
+          .array(
+            z.object({
+              id: z.number(),
+              name: z.string(),
+              type: z.enum(['END', 'START', 'GUARD', 'FUNCTION', 'WAIT', 'LISTEN']),
+              status: z.enum(['added', 'pending', 'completed', 'failed']),
+              result: z.any(),
+              taskId: z.string(),
+            })
+          )
+          .nullish()
+          .describe('Runtime Tasks'),
+        runtimeLogs: z
+          .array(
+            z.object({
+              id: z.number(),
+              log: z.string().nullish(),
+              timestamp: z.date(),
+              taskId: z.string(),
+              severity: z.enum(['log', 'info', 'error', 'warn']).nullish(),
+            })
+          )
+          .nullish()
+          .describe('Runtime Logs'),
       }),
     })
   )
