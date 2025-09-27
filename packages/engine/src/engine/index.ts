@@ -1,6 +1,6 @@
 import type { ProcessorResult, RuntimeInfo } from '../types/index';
 import type { WorkflowPersistor } from '../persistor/index';
-import { LogPersistor } from 'src/persistor/log';
+import { LogPersistor } from '../persistor/log';
 import { StartProcessor } from './processors/start';
 import { safeAsync } from '@repo/utils';
 import { EndProcessor } from './processors/end';

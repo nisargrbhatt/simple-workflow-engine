@@ -32,7 +32,8 @@
       "@orpc/server": "^1.7.4",
       "@orpc/zod": "^1.7.4",
       "@orpc/openapi-client": "^1.7.4",
-      "@orpc/tanstack-query": "^1.7.4"
+      "@orpc/tanstack-query": "^1.7.4",
+      "typescript": "latest"
     }
   }
 }

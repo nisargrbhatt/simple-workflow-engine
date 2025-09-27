@@ -1,0 +1,9 @@
+{
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "env": ["PORT", "SERVER_KEY", "DATABASE_URL"],
+      "outputs": ["build/**"]
+    }
+  }
+}

@@ -3,15 +3,17 @@ import { definitionTable } from './schema';
 
 async function seed() {
   // Add default definition templates
-  await db.insert(definitionTable).values({
-    name: 'test',
-    description: '',
-    tasks: [],
-    global: {},
-    status: 'active',
-    type: 'template',
-    uiObject: {},
-  });
+  await db.insert(definitionTable).values([
+    {
+      name: 'test',
+      description: '',
+      tasks: [],
+      global: undefined,
+      status: 'active',
+      type: 'template',
+      uiObject: {},
+    },
+  ]);
 }
 
 async function main() {

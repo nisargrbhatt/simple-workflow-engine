@@ -6,16 +6,19 @@
   "exports": {
     "./types": "./src/types/index.ts",
     "./engine": "./src/engine/index.ts",
-    "./persistor":"./src/persistor/index.ts"
+    "./persistor": "./src/persistor/index.ts"
   },
   "sideEffects": false,
-  "scripts": {},
+  "scripts": {
+    "check-types": "tsc --noEmit"
+  },
   "dependencies": {
     "zod": "catalog:",
     "@repo/utils": "workspace:*"
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "typescript": "catalog:"
   }
 }

@@ -7,8 +7,14 @@
       "persistent": true
     },
     "build": {
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "dependsOn": ["^build"],
-      "cache": true
+      "cache": true,
+      "outputs": ["build/**"]
+    },
+    "check-types": {
+      "cache": true,
+      "persistent": false
     }
   }
 }

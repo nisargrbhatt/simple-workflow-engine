@@ -2,7 +2,7 @@
   "name": "@repo/orpc",
   "version": "0.0.0",
   "devDependencies": {
-    "typescript": "latest",
+    "typescript": "catalog:",
     "@repo/typescript-config": "workspace:*"
   },
   "exports": {
