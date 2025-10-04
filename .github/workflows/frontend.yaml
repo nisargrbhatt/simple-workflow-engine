@@ -19,4 +19,4 @@ jobs:
       - name: Create Env file for wrangler
         run: echo "CLOUDFLARE_ACCOUNT_ID=${{ secrets.CLOUDFLARE_ACCOUNT_ID }}\nCLOUDFLARE_API_TOKEN=${{ secrets.CLOUDFLARE_API_TOKEN }}" > .env
       - name: Deploy
-        run: nCLOUDFLARE_API_TOKEN=${{ secrets.CLOUDFLARE_API_TOKEN }} npx wrangler pages deploy apps/frontend/build --project-name=simple-workflow-engine-ui
+        run: CLOUDFLARE_API_TOKEN=${{ secrets.CLOUDFLARE_API_TOKEN }} npx wrangler pages deploy apps/frontend/build --project-name=simple-workflow-engine-ui
