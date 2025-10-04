@@ -13,3 +13,5 @@ export const getRuntimeTaskList = db.query.runtimeTask
     where: eq(runtimeTaskTable.runtimeId, sql.placeholder('runtimeId')),
   })
   .prepare('getRuntimeTaskList');
+
+export const dbHealthCheck = sql`SELECT 1`;

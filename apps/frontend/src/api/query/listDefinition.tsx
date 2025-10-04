@@ -2,7 +2,7 @@ import { openApiClient } from '@lib/orpc';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router';
-import { z } from 'zod';
+import { z } from 'zod/v3';
 
 const responseSchema = z.object({
   list: z.array(

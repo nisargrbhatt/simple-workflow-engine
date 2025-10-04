@@ -5,7 +5,7 @@ import { getRandomIdForTask } from '@lib/random';
 import type { EdgePropTypes, NodePropTypes } from '@/components/workflow';
 import type { UseFieldArrayReturn, UseFormReturn } from 'react-hook-form';
 import { useFieldArray, useForm } from 'react-hook-form';
-import { z } from 'zod';
+import { z } from 'zod/v3';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useCreateDefinitionMutation } from '@/api/mutation/createDefinitionMutation';
 import { useNavigate } from 'react-router';

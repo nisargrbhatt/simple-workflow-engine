@@ -5,7 +5,7 @@ import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { DeleteIcon, OctagonX, SettingsIcon } from 'lucide-react';
 import { cn } from '@lib/utils';
-import { z } from 'zod';
+import { z } from 'zod/v3';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
