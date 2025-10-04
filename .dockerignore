@@ -1,0 +1,6 @@
+node_modules
+.turbo
+.github
+.vscode
+render.yaml
+*.log
