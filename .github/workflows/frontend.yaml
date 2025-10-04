@@ -1,0 +1,23 @@
+name: frontend-deploy
+on:
+  pull_request:
+    branches: ["master"]
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - name: Install Dependencies
+        run: bun install
+      - name: Create Env file
+        run: echo "VITE_BACKEND_URL=${{ secrets.VITE_BACKEND_URL }}" > apps/frontend/.env
+      - name: Build
+        run: bun run build -F frontend
+      - name: Deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          command: |
+            pages deploy apps/frontend/build --project-name=simple-workflow-engine-ui
