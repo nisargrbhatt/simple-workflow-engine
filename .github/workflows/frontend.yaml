@@ -5,6 +5,7 @@ on:
   workflow_dispatch:
 jobs:
   build:
+    name: Build frontend
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -15,9 +16,7 @@ jobs:
         run: echo "VITE_BACKEND_URL=${{ secrets.VITE_BACKEND_URL }}" > apps/frontend/.env
       - name: Build
         run: bun run build -F frontend
+      - name: Create Env file for wrangler
+        run: echo "CLOUDFLARE_ACCOUNT_ID=${{ secrets.CLOUDFLARE_ACCOUNT_ID }}\nCLOUDFLARE_API_TOKEN=${{ secrets.CLOUDFLARE_API_TOKEN }}" > .env
       - name: Deploy
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          command: |
-            pages deploy apps/frontend/build --project-name=simple-workflow-engine-ui
+        run: npx wrangler pages deploy apps/frontend/build --project-name=simple-workflow-engine-ui
