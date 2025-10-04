@@ -3,5 +3,5 @@ services:
     name: bun
     runtime: docker
     repo: https://github.com/nisargrbhatt/simple-workflow-engine
-    plan: starter
+    plan: free
     autoDeploy: false
