@@ -7,7 +7,7 @@ import DefinitionsPage from './app/definitions/page';
 import { Layout } from './components/layout/Layout';
 import CreateDefinitionPage from './app/definitions/create/page';
 import DefinitionDetailPage from './app/definitions/[id]/page';
-import RuntimeDetailPage from './app/runtime/[id]/page';
+import RuntimeDetailPage from './app/definitions/[id]/runtime/[id]/page';
 
 const router = createBrowserRouter([
   {
@@ -31,7 +31,7 @@ const router = createBrowserRouter([
         element: <DefinitionDetailPage />,
       },
       {
-        path: 'runtime/:id',
+        path: 'definitions/:definitionId/runtime/:id',
         element: <RuntimeDetailPage />,
       },
     ],

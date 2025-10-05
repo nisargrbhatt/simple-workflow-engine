@@ -2,6 +2,8 @@ import { useListRuntime } from '@/api/query/listRuntime';
 import SimplePagination from '@/components/helpers/SimplePagination';
 import { useEffect, type FC } from 'react';
 import RuntimeCard from './RuntimeCard';
+import { WorkflowIcon } from 'lucide-react';
+import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 
 interface Props {
   /**
@@ -23,10 +25,27 @@ const RuntimeList: FC<Props> = ({ id }) => {
   return (
     <div className="flex w-full flex-col items-start justify-start gap-2">
       {isLoading ? <p className="w-full text-center">Loading...</p> : null}
+      {data && !isLoading && data?.list?.length < 1 ? (
+        <Empty className="mx-auto">
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <WorkflowIcon />
+            </EmptyMedia>
+            <EmptyTitle>No Runtimes Yet</EmptyTitle>
+            <EmptyDescription>You haven&apos;t created any runtimes yet.</EmptyDescription>
+          </EmptyHeader>
+        </Empty>
+      ) : null}
       {data && !isLoading ? (
         <div className="grid w-full grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3">
           {data?.list?.map((i) => (
-            <RuntimeCard key={i.id} id={i.id} workflowStatus={i.workflowStatus} createdAt={i.createdAt} />
+            <RuntimeCard
+              key={i.id}
+              id={i.id}
+              workflowStatus={i.workflowStatus}
+              createdAt={i.createdAt}
+              definitionId={id}
+            />
           ))}
         </div>
       ) : null}

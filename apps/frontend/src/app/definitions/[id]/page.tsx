@@ -1,8 +1,16 @@
 import { useFetchDefinition } from '@/api/query/fetchDefinition';
 import { useEffect, type FC } from 'react';
-import { Navigate, useParams } from 'react-router';
+import { Link, Navigate, useParams } from 'react-router';
 import RunNowAction from './__components/RunNowAction';
 import RuntimeList from './__components/RuntimeList';
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
 
 interface Props {}
 
@@ -30,6 +38,19 @@ const DefinitionDetailPage: FC<Props> = () => {
 
   return (
     <div className="flex h-full w-full flex-col items-start justify-start gap-2">
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link to="/definitions">Home</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>Definition {id}</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
       <h1 className="text-2xl leading-tight font-bold tracking-tighter sm:text-3xl md:text-4xl lg:leading-[1.1]">
         {data?.name}
       </h1>

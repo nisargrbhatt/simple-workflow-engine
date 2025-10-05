@@ -3,6 +3,7 @@ import { Link, Outlet } from 'react-router';
 import { ModeToggle } from '../helpers/mode-toggle';
 import { WorkflowIcon } from 'lucide-react';
 import ContextFactory from '@/contexts/ContextFactory';
+import { Button } from '../ui/button';
 
 export function Layout() {
   return (
@@ -14,10 +15,11 @@ export function Layout() {
               <WorkflowIcon />
             </Link>
             <nav className="flex flex-row items-center justify-center gap-2">
-              <Link to="/definitions" className="text-muted-foreground hover:text-foreground transition-colors">
-                Definitions
+              <Link to="/definitions" className="text-muted-foreground hover:text-foreground transition-colors text-sm">
+                <Button variant="ghost" size="sm" type="button">
+                  Definitions
+                </Button>
               </Link>
-              <ModeToggle />
             </nav>
           </div>
         </header>
@@ -26,9 +28,7 @@ export function Layout() {
         </main>
         <footer className="border-t py-6">
           <div className="container mx-auto flex items-center justify-between px-4">
-            <Link to="/docs" className="text-muted-foreground hover:text-foreground transition-colors">
-              Documentation
-            </Link>
+            <ModeToggle />
             <p className="text-muted-foreground text-sm">
               Built by{' '}
               <a href="https://nisargbhatt.org" target="_blank">

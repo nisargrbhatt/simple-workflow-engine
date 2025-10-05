@@ -24,6 +24,7 @@ import { Switch } from '@/components/ui/switch';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKey } from '@/api/query/listRuntime';
 import { useTheme } from '@/contexts/ThemeContext';
+import { Spinner } from '@/components/ui/spinner';
 
 type DefinitionObject = NonNullable<ReturnType<typeof useFetchDefinition>['data']>;
 
@@ -64,7 +65,7 @@ const RunNowAction: FC<Props> = ({ id }) => {
         onSuccess: (data) => {
           toast.success('Engine started successfully');
           if (typeof data?.data?.id === 'number') {
-            navigate(`/runtime/${data?.data?.id}`);
+            navigate(`/definitions/${id}/runtime/${data?.data?.id}`);
           }
           safeAsync(
             queryClient.invalidateQueries({
@@ -145,7 +146,8 @@ const RunNowAction: FC<Props> = ({ id }) => {
               Cancel
             </Button>
           </DialogClose>
-          <Button type="submit" form="run-now-form" onClick={onSubmit}>
+          <Button type="submit" form="run-now-form" onClick={onSubmit} disabled={runDefinition.status === 'pending'}>
+            {runDefinition.status === 'pending' ? <Spinner /> : null}
             Run Now
           </Button>
         </DialogFooter>
