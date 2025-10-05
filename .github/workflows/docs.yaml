@@ -1,11 +1,11 @@
-name: frontend-deploy
+name: docs-deploy
 on:
   pull_request:
     branches: ["master"]
   workflow_dispatch:
 jobs:
   build:
-    name: Build frontend
+    name: Build Docs
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
