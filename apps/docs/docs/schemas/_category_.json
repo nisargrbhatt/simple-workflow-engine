@@ -1,0 +1,8 @@
+{
+  "label": "Schemas",
+  "position": 2,
+  "link": {
+    "type": "generated-index",
+    "description": "Schemas used in Workflow Engine"
+  }
+}

@@ -1,0 +1,26 @@
+---
+sidebar_position: 2
+title: Architecture
+---
+
+# Architecture
+
+import IdealImage from "@theme/IdealImage";
+import ArchitectureImage from "../static/img/architecture.png";
+
+<IdealImage
+  img={ArchitectureImage}
+  role="img"
+  alt={"Workflow Engine Architecture"}
+  title={"Workflow Engine Architecture"}
+/>
+
+## High Level Flow
+
+1. User calls `/start` api with `definition_id`.
+2. Transport Controller creates a runtime in database for logs and result persistance.
+3. Transport Controller calls Engine to process Start Task.
+4. Engine processes the incoming task with the help of different processor based on Task Type.
+5. Engine saves the logs, result and status of Workflow runtime in the database.
+6. Engine calls Transport Service to process next task.
+7. Transport service calls kafka topic/http api based on config set.

@@ -1,0 +1,96 @@
+---
+sidebar_position: 1
+title: Task
+description: Workflow Task Schema
+---
+
+# Task
+
+```ts title="Task"
+export const TaskStatus = {
+  /**
+   * Default State for Task
+   */
+  pending: "pending",
+  /**
+   * Task Process Completed
+   */
+  completed: "completed",
+  /**
+   * Task Process Started
+   */
+  started: "started",
+  /**
+   * Task Process failed
+   */
+  failed: "failed",
+} as const;
+
+export type TaskStatusType = keyof typeof TaskStatus;
+
+export const TaskType = {
+  FUNCTION: "FUNCTION",
+  WAIT: "WAIT",
+  START: "START",
+  END: "END",
+  LISTEN: "LISTEN",
+  GUARD: "GUARD",
+} as const;
+
+export type TaskTypeType = keyof typeof TaskType;
+
+export interface Task {
+  /**
+   * Task ID
+   */
+  id: string;
+  /**
+   * Task Name
+   */
+  name: string;
+  /**
+   * Next Task name
+   */
+  next: string[];
+  /**
+   * Previos Task name
+   */
+  previous: string[];
+  /**
+   * Task Params
+   */
+  params?: Record<string, any | any[]>;
+  /**
+   * Dynamic Code - In Javascript
+   * Only for Guard/Function Task
+   * @type {String}
+   */
+  exec?: FunctionNode;
+  /**
+   * Dynamic Code - In Javascript
+   * Only for Guard/Function Task
+   * @type {String}
+   */
+  execTs?: FunctionNode;
+  /**
+   * Task Type
+   */
+  type: TaskTypeType;
+  /**
+   * Task Status
+   */
+  status: TaskStatusType;
+}
+
+const FunctionString = `
+/**
+ * @returns {Promise<unknown>} Return output.
+ * @see {@link https://workflow-engine-docs.pages.dev/docs/tasks/function_task}
+ */
+async function handler() {
+  return { "hello": "world" };
+}
+`;
+
+export type FunctionNode = typeof FunctionString;
+```
