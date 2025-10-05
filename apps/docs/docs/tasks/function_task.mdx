@@ -1,0 +1,23 @@
+---
+sidebar_position: 3
+title: Function Task
+---
+
+# Function Task
+
+Function Task is used to execute a any javascript function and the output is stored in the resultMap.
+
+```json title="Function Task Example"
+{
+  "id": "a8c86331-880f-43d1-8bdb-906f5b2715b0",
+  "name": "Test Task",
+  "type": "FUNCTION",
+  "params": {
+    "token": "abc"
+  },
+  "next": ["End Task"],
+  "previous": ["Guard 123"],
+  "exec": "\"use strict\";\n/**\n * @returns {Promise<string>} Return JSON.stringify output. If you want to return any object, send it JSON.stringify. For null/undefined, return JSON.stringify({})\n * @see {@link https://docs.workflow-engine.com/Function_Task}\n*/\nasync function handler() {\n    const params = getWorkflowParams();\n    logger(params.token);\n    return JSON.stringify({});\n}\n",
+  "execTs": "\n/**\n * @returns {Promise<string>} Return JSON.stringify output. If you want to return any object, send it JSON.stringify. For null/undefined, return JSON.stringify({})\n * @see {@link https://docs.workflow-engine.com/Function_Task}\n*/\nasync function handler(): Promise<string> {\n  const params = getWorkflowParams();\n  logger(params.token)\n  return JSON.stringify({});\n}\n      "
+}
+```

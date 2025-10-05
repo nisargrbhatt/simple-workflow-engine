@@ -1,0 +1,24 @@
+---
+sidebar_position: 1
+title: Start Task
+---
+
+# Start Task
+
+Start Task is entrance of the Workflow Runtime.
+:::caution
+
+There should be only one Start Task in the Workflow Definition.
+
+:::
+
+```json title="Start Task Example"
+{
+  "id": "2f8f2520-46be-4199-b85e-e889a29c2f01",
+  "name": "Start Task",
+  "type": "START",
+  "params": {},
+  "next": ["Guard 123", "Something Else1"],
+  "previous": []
+}
+```

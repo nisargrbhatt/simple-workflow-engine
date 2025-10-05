@@ -1,0 +1,21 @@
+---
+sidebar_position: 6
+title: Listen Task
+---
+
+# Listen Task
+
+Listen Task is like a breakpoint of the code. Workflow Runtime stops at the Listen Task and listens for the external event to resumed. Events can be like HTTP/Kafka/Socket. (Currently only HTTP Support. In future will implement Kafka and other Wrappers)
+
+```json title="Listen Task Example"
+{
+  "id": "c0026a1d-da2d-4599-aa51-81f2e06f395e",
+  "name": "Listen for events",
+  "type": "LISTEN",
+  "params": {
+    "apiKey": "c0026a1d-da2d-4599-aa51-81f2e06f3951"
+  },
+  "next": ["End Task"],
+  "previous": ["Something Else1"]
+}
+```

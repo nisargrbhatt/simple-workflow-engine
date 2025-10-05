@@ -1,0 +1,51 @@
+---
+sidebar_position: 2
+title: Definition
+description: Workflow Definition Schema
+---
+
+# Workflow Definition
+
+```ts title="Definition"
+export const DefinitionStatus = {
+  active: "active",
+  inactive: "inactive",
+} as const;
+
+export type DefinitionStatusType = keyof typeof DefinitionStatus;
+
+export interface Definition {
+  _id: string;
+  /**
+   * Definition Name
+   */
+  name: string;
+  /**
+   * Definition Description
+   */
+  description: string;
+  /**
+   * Definition Task List
+   * @see {@link https://workflow-engine-docs.pages.dev/docs/schemas/task}
+   */
+  tasks: Task[];
+  /**
+   * Global Params
+   */
+  global?: Record<string, any>;
+  /**
+   * Definition Status
+   */
+  status: DefinitionStatusType;
+  /**
+   * UI Object - Used by Frontend only
+   */
+  uiObject?: Record<string, any>;
+  /**
+   * Owner Id (Auth0 Id)
+   */
+  userId: string;
+  createdAt: string;
+  updatedAt: string;
+}
+```

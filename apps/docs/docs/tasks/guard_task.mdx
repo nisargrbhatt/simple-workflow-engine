@@ -1,0 +1,21 @@
+---
+sidebar_position: 4
+title: Guard Task
+---
+
+# Guard Task
+
+Guard Task is same as Function Task but it checks the result of the function code and conditionally calls the next tasks.
+
+```json title="Guard Task Example"
+{
+  "id": "a3ff0e7a-8ae3-4235-8ddb-7273166c08c6",
+  "name": "Guard 123",
+  "type": "GUARD",
+  "params": {},
+  "next": ["Test Task"],
+  "previous": ["Start Task"],
+  "exec": "\"use strict\";\n/**\n * @returns {Promise<boolean>} Return Boolean output\n * @see {@link https://docs.workflow-engine.com/Guard_Task}\n*/\nasync function handler() {\n    return true;\n}\n",
+  "execTs": "\n/**\n * @returns {Promise<boolean>} Return Boolean output\n * @see {@link https://docs.workflow-engine.com/Guard_Task}\n*/\nasync function handler(): Promise<boolean> {\n  return true;\n}\n"
+}
+```

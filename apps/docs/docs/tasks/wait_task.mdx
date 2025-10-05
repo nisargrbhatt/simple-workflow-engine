@@ -1,0 +1,21 @@
+---
+sidebar_position: 5
+title: Wait Task
+---
+
+# Wait Task
+
+Wait Task is used when there is parallel tasks and current task meet at the intersection. Wait Task will wait for given task to be finished, only after that it will trigger next. It has deduplication where it will only trigger next tasks one time.
+
+```json title="Wait Task Example"
+{
+  "id": "c0026a1d-da2d-4599-aa51-81f2e06f395e",
+  "name": "Wait for Me",
+  "type": "WAIT",
+  "params": {
+    "taskNames": ["Something Else1"]
+  },
+  "next": ["End Task"],
+  "previous": ["Something Else1"]
+}
+```
