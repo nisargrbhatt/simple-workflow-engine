@@ -15,7 +15,7 @@ const config: Config = {
   },
 
   // Set the production url of your site here
-  url: 'https://simple-workflow-engine-docs.pages.dev',
+  url: 'https://engine-docs.nisargbhatt.org',
 
   baseUrl: '/',
 

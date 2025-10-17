@@ -14,6 +14,8 @@
     "@monaco-editor/react": "^4.7.0",
     "@orpc/openapi-client": "catalog:",
     "@orpc/tanstack-query": "catalog:",
+    "@orpc/client": "catalog:",
+    "@orpc/contract": "catalog:",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-alert-dialog": "^1.1.15",
     "@radix-ui/react-aspect-ratio": "^1.1.7",

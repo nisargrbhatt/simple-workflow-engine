@@ -67,7 +67,7 @@ const HomePage: FC<Props> = () => {
             <CardDescription>How to use this project</CardDescription>
           </CardHeader>
           <CardFooter>
-            <Link to={'https://workflow-engine-docs.pages.dev/'} target="_blank">
+            <Link to={'https://engine-docs.nisargbhatt.org'} target="_blank">
               <Button type="button" size="sm">
                 Docs
               </Button>
