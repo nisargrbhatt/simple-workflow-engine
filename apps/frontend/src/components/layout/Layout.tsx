@@ -31,7 +31,7 @@ export function Layout() {
             <ModeToggle />
             <p className="text-muted-foreground text-sm">
               Built by{' '}
-              <a href="https://nisargbhatt.org" target="_blank">
+              <a href="https://nisargbhatt.org" target="_blank" className="link">
                 Nisarg
               </a>{' '}
               for everyone
