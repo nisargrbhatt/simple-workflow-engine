@@ -1,14 +1,20 @@
-import type { FC } from 'react';
-import DefinitionForm from './__components/DefinitionForm';
+import DefinitionForm from './-components/DefinitionForm';
 import CreateDefinitionContextProvider from '@/contexts/CreateDefinitionContext';
 import { ReactFlowProvider } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { useSearchParams } from 'react-router';
-import DefinitionFetcher from './__components/DefinitionFetcher';
+import DefinitionFetcher from './-components/DefinitionFetcher';
+import { createFileRoute } from '@tanstack/react-router';
+import z from 'zod/v3';
 
-interface Props {}
+export const Route = createFileRoute('/definitions/create/')({
+  component: Index,
+  validateSearch: z.object({
+    definitionId: z.coerce.number().optional(),
+  }),
+});
 
-const CreateDefinitionPage: FC<Props> = () => {
+function Index() {
   const [searchParams] = useSearchParams();
 
   const definitionId = searchParams.get('definitionId');
@@ -24,6 +30,4 @@ const CreateDefinitionPage: FC<Props> = () => {
       </CreateDefinitionContextProvider>
     </ReactFlowProvider>
   );
-};
-
-export default CreateDefinitionPage;
+}

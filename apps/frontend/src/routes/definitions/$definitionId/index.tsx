@@ -1,8 +1,8 @@
 import { useFetchDefinition } from '@/api/query/fetchDefinition';
 import { useEffect, type FC } from 'react';
 import { Link, Navigate, useParams } from 'react-router';
-import RunNowAction from './__components/RunNowAction';
-import RuntimeList from './__components/RuntimeList';
+import RunNowAction from './-components/RunNowAction';
+import RuntimeList from './-components/RuntimeList';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -11,10 +11,13 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
+import { createFileRoute } from '@tanstack/react-router';
 
-interface Props {}
+export const Route = createFileRoute('/definitions/$definitionId/')({
+  component: Index,
+});
 
-const DefinitionDetailPage: FC<Props> = () => {
+function Index() {
   const { id } = useParams();
   const { data, isLoading, error } = useFetchDefinition(id ?? '');
 
@@ -59,6 +62,4 @@ const DefinitionDetailPage: FC<Props> = () => {
       <RuntimeList id={id} />
     </div>
   );
-};
-
-export default DefinitionDetailPage;
+}

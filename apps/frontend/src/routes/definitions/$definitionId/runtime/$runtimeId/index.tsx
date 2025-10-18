@@ -1,12 +1,12 @@
 import { useFetchRuntime } from '@/api/query/fetchRuntime';
 import { useEffect, type FC } from 'react';
 import { Link, Navigate, useParams } from 'react-router';
-import RuntimeTaskCard from './__components/RuntimeTaskCard';
+import RuntimeTaskCard from './-components/RuntimeTaskCard';
 import { Button } from '@/components/ui/button';
 import { Calendar, RefreshCwIcon, ServerCrashIcon, WorkflowIcon } from 'lucide-react';
 import { cn } from '@lib/utils';
 import { Badge } from '@/components/ui/badge';
-import RuntimeStartAction from './__components/RuntimeStartAction';
+import RuntimeStartAction from './-components/RuntimeStartAction';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -16,10 +16,13 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { Item, ItemActions, ItemContent, ItemDescription, ItemMedia, ItemTitle } from '@/components/ui/item';
+import { createFileRoute } from '@tanstack/react-router';
 
-interface Props {}
+export const Route = createFileRoute('/definitions/$definitionId/runtime/$runtimeId/')({
+  component: Index,
+});
 
-const RuntimeDetail: FC<Props> = () => {
+function Index() {
   const { id, definitionId } = useParams();
 
   const { data, isLoading, error, refetch, isFetching } = useFetchRuntime(Number(id));
@@ -129,6 +132,4 @@ const RuntimeDetail: FC<Props> = () => {
       </div>
     </div>
   );
-};
-
-export default RuntimeDetail;
+}

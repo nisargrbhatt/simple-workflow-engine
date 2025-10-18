@@ -1,5 +1,15 @@
 {
     "typescript.tsdk": "node_modules/typescript/lib",
     "npm.packageManager": "bun",
-    "npm.scriptRunner": "bun"
+    "npm.scriptRunner": "bun",
+    "editor.defaultFormatter": "biomejs.biome",
+    "files.readonlyInclude": {
+        "**/routeTree.gen.ts": true
+    },
+    "files.watcherExclude": {
+        "**/routeTree.gen.ts": true
+    },
+    "search.exclude": {
+        "**/routeTree.gen.ts": true
+    }
 }

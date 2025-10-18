@@ -1,12 +1,14 @@
+import { createFileRoute } from '@tanstack/react-router';
 import { useHealthCheck } from '@/api/query/healthCheck';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { useEffect, type FC } from 'react';
-import { Link } from 'react-router';
+import { useEffect } from 'react';
 
-interface Props {}
+export const Route = createFileRoute('/')({
+  component: Index,
+});
 
-const HomePage: FC<Props> = () => {
+function Index() {
   const { data, error, refetch, isFetching } = useHealthCheck();
 
   useEffect(() => {
@@ -54,11 +56,11 @@ const HomePage: FC<Props> = () => {
             <p className="text-xs text-muted-foreground">This project is open source and available on Github.</p>
           </CardContent>
           <CardFooter>
-            <Link to={'https://github.com/nisargrbhatt/simple-workflow-engine'} target="_blank">
+            <a href={'https://github.com/nisargrbhatt/simple-workflow-engine'} target="_blank">
               <Button type="button" size="sm">
                 Github
               </Button>
-            </Link>
+            </a>
           </CardFooter>
         </Card>
         <Card className="w-full">
@@ -67,16 +69,14 @@ const HomePage: FC<Props> = () => {
             <CardDescription>How to use this project</CardDescription>
           </CardHeader>
           <CardFooter>
-            <Link to={'https://engine-docs.nisargbhatt.org'} target="_blank">
+            <a href={'https://engine-docs.nisargbhatt.org'} target="_blank">
               <Button type="button" size="sm">
                 Docs
               </Button>
-            </Link>
+            </a>
           </CardFooter>
         </Card>
       </div>
     </div>
   );
-};
-
-export default HomePage;
+}

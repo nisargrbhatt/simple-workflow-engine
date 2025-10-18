@@ -1,45 +1,40 @@
-import React from 'react';
+import { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
+import { RouterProvider, createRouter } from '@tanstack/react-router';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+// Import the generated route tree
+import { routeTree } from './routeTree.gen';
 import './index.css';
-import { createBrowserRouter, RouterProvider } from 'react-router';
-import HomePage from './app/page';
-import DefinitionsPage from './app/definitions/page';
-import { Layout } from './components/layout/Layout';
-import CreateDefinitionPage from './app/definitions/create/page';
-import DefinitionDetailPage from './app/definitions/[id]/page';
-import RuntimeDetailPage from './app/definitions/[id]/runtime/[id]/page';
 
-const router = createBrowserRouter([
-  {
-    path: '',
-    element: <Layout />,
-    children: [
-      {
-        path: '',
-        element: <HomePage />,
-      },
-      {
-        path: 'definitions',
-        element: <DefinitionsPage />,
-      },
-      {
-        path: 'definitions/create',
-        element: <CreateDefinitionPage />,
-      },
-      {
-        path: 'definitions/:id',
-        element: <DefinitionDetailPage />,
-      },
-      {
-        path: 'definitions/:definitionId/runtime/:id',
-        element: <RuntimeDetailPage />,
-      },
-    ],
+const queryClient = new QueryClient();
+
+// Create a new router instance
+const router = createRouter({
+  routeTree,
+  context: {
+    queryClient,
   },
-]);
+  defaultPreload: 'intent',
+  defaultPreloadStaleTime: 0,
+  scrollRestoration: true,
+});
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>
-);
+// Register the router instance for type safety
+declare module '@tanstack/react-router' {
+  interface Register {
+    router: typeof router;
+  }
+}
+
+// Render the app
+const rootElement = document.getElementById('root')!;
+if (!rootElement.innerHTML) {
+  const root = ReactDOM.createRoot(rootElement);
+  root.render(
+    <StrictMode>
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    </StrictMode>
+  );
+}
