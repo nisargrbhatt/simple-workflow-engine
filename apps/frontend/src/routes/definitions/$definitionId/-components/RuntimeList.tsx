@@ -1,20 +1,30 @@
-import { useListRuntime } from '@/api/query/listRuntime';
-import SimplePagination from '@/components/helpers/SimplePagination';
-import { useEffect, type FC } from 'react';
-import RuntimeCard from './RuntimeCard';
-import { WorkflowIcon } from 'lucide-react';
-import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
+import { listRuntimeQuery } from "@/api/query/listRuntime";
+import SimplePagination from "@/components/helpers/SimplePagination";
+import { useEffect, type FC } from "react";
+import RuntimeCard from "./RuntimeCard";
+import { WorkflowIcon } from "lucide-react";
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
+import { useNavigate, useParams, useSearch } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 
-interface Props {
-  /**
-   * Definition ID
-   */
-  id: string;
-}
+interface Props {}
 
-const RuntimeList: FC<Props> = ({ id }) => {
-  const { query, setPaginationState } = useListRuntime(id);
-  const { data, isLoading, error } = query;
+const RuntimeList: FC<Props> = () => {
+  const { definitionId } = useParams({ from: "/definitions/$definitionId/" });
+  const { page, size } = useSearch({ from: "/definitions/$definitionId/" });
+  const navigate = useNavigate();
+  const { data, isLoading, error } = useQuery(
+    listRuntimeQuery({
+      definitionId: Number(definitionId),
+      paginationState: { page, size },
+    })
+  );
 
   useEffect(() => {
     if (error) {
@@ -32,7 +42,9 @@ const RuntimeList: FC<Props> = ({ id }) => {
               <WorkflowIcon />
             </EmptyMedia>
             <EmptyTitle>No Runtimes Yet</EmptyTitle>
-            <EmptyDescription>You haven&apos;t created any runtimes yet.</EmptyDescription>
+            <EmptyDescription>
+              You haven&apos;t created any runtimes yet.
+            </EmptyDescription>
           </EmptyHeader>
         </Empty>
       ) : null}
@@ -44,13 +56,11 @@ const RuntimeList: FC<Props> = ({ id }) => {
               id={i.id}
               workflowStatus={i.workflowStatus}
               createdAt={i.createdAt}
-              definitionId={id}
             />
           ))}
         </div>
       ) : null}
-      {!isLoading && (!data || data?.list?.length < 1) ? <p className="w-full text-center">No runtimes found</p> : null}
-      {data ? (
+      {data?.pagination ? (
         <div className="flex w-full flex-row items-center justify-center">
           <SimplePagination
             pagination={{
@@ -58,11 +68,15 @@ const RuntimeList: FC<Props> = ({ id }) => {
               size: data?.pagination?.size,
               total: data?.pagination?.total,
             }}
-            onChange={(page) => {
-              setPaginationState((prev) => ({
-                ...prev,
-                page: page,
-              }));
+            onChange={(newPage) => {
+              navigate({
+                from: "/definitions/$definitionId",
+                to: "/definitions/$definitionId",
+                search: (prev) => ({
+                  ...prev,
+                  page: newPage,
+                }),
+              });
             }}
           />
         </div>

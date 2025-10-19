@@ -1,6 +1,5 @@
-import { useRunDefinitionMutation } from '@/api/mutation/runDefinitionMutation';
-import type { useFetchDefinition } from '@/api/query/fetchDefinition';
-import { Button } from '@/components/ui/button';
+import { useRunDefinitionMutation } from "@/api/mutation/runDefinitionMutation";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -10,37 +9,43 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Editor } from '@monaco-editor/react';
-import type { FC } from 'react';
-import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router';
-import { toast } from 'sonner';
-import { z } from 'zod/v3';
-import { safeAsync, safeSync } from '@repo/utils';
-import { Switch } from '@/components/ui/switch';
-import { useQueryClient } from '@tanstack/react-query';
-import { queryKey } from '@/api/query/listRuntime';
-import { useTheme } from '@/contexts/ThemeContext';
-import { Spinner } from '@/components/ui/spinner';
-
-type DefinitionObject = NonNullable<ReturnType<typeof useFetchDefinition>['data']>;
+} from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Editor } from "@monaco-editor/react";
+import type { FC } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod/v3";
+import { safeAsync, safeSync } from "@repo/utils";
+import { Switch } from "@/components/ui/switch";
+import { useQueryClient } from "@tanstack/react-query";
+import { queryKey } from "@/api/query/listRuntime";
+import { useTheme } from "@/contexts/ThemeContext";
+import { Spinner } from "@/components/ui/spinner";
+import { useNavigate, useParams } from "@tanstack/react-router";
 
 const formSchema = z.object({
   params: z.string().refine((val) => {
     const result = safeSync(() => JSON.parse(val));
     return result.success;
-  }, 'Invalid JSON'),
+  }, "Invalid JSON"),
   autoStart: z.boolean(),
 });
 
-interface Props {
-  id: DefinitionObject['id'];
-}
+interface Props {}
 
-const RunNowAction: FC<Props> = ({ id }) => {
+const RunNowAction: FC<Props> = () => {
+  const { definitionId } = useParams({ from: "/definitions/$definitionId/" });
+
   const { theme } = useTheme();
   const runDefinition = useRunDefinitionMutation();
   const navigate = useNavigate();
@@ -49,7 +54,7 @@ const RunNowAction: FC<Props> = ({ id }) => {
   const paramForm = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      params: '{}',
+      params: "{}",
       autoStart: false,
     },
   });
@@ -58,14 +63,20 @@ const RunNowAction: FC<Props> = ({ id }) => {
     await runDefinition.mutateAsync(
       {
         globalParams: JSON.parse(values.params),
-        definitionId: id,
+        definitionId: Number(definitionId),
         autoStart: values.autoStart,
       },
       {
         onSuccess: (data) => {
-          toast.success('Engine started successfully');
-          if (typeof data?.data?.id === 'number') {
-            navigate(`/definitions/${id}/runtime/${data?.data?.id}`);
+          toast.success("Engine started successfully");
+          if (typeof data?.data?.id === "number") {
+            navigate({
+              from: "/definitions/$definitionId",
+              to: "/definitions/$definitionId/runtime/$runtimeId",
+              params: {
+                runtimeId: String(data?.data?.id),
+              },
+            });
           }
           safeAsync(
             queryClient.invalidateQueries({
@@ -75,7 +86,7 @@ const RunNowAction: FC<Props> = ({ id }) => {
         },
         onError: (error) => {
           console.error(error);
-          toast.error('Failed to start engine');
+          toast.error("Failed to start engine");
         },
       }
     );
@@ -92,7 +103,12 @@ const RunNowAction: FC<Props> = ({ id }) => {
           <DialogDescription>Run Now</DialogDescription>
         </DialogHeader>
         <Form {...paramForm}>
-          <form onSubmit={onSubmit} noValidate id="run-now-form" className="w-full">
+          <form
+            onSubmit={onSubmit}
+            noValidate
+            id="run-now-form"
+            className="w-full"
+          >
             <div className="flex flex-col items-start justify-start gap-2">
               <FormField
                 control={paramForm.control}
@@ -101,10 +117,16 @@ const RunNowAction: FC<Props> = ({ id }) => {
                   <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
                     <div className="space-y-0.5">
                       <FormLabel>Auto Start</FormLabel>
-                      <FormDescription>Auto start the engine. Else you will have to start it manually.</FormDescription>
+                      <FormDescription>
+                        Auto start the engine. Else you will have to start it
+                        manually.
+                      </FormDescription>
                     </div>
                     <FormControl>
-                      <Switch checked={field.value} onCheckedChange={field.onChange} />
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
                     </FormControl>
                   </FormItem>
                 )}
@@ -117,7 +139,7 @@ const RunNowAction: FC<Props> = ({ id }) => {
                     <FormLabel>Params</FormLabel>
                     <FormControl>
                       <Editor
-                        height={'30vh'}
+                        height={"30vh"}
                         value={field.value}
                         onChange={(value) => {
                           field.onChange(value);
@@ -127,11 +149,13 @@ const RunNowAction: FC<Props> = ({ id }) => {
                             enabled: false,
                           },
                         }}
-                        theme={theme === 'light' ? 'light' : 'vs-dark'}
+                        theme={theme === "light" ? "light" : "vs-dark"}
                         language="json"
                       />
                     </FormControl>
-                    <FormDescription>Enter params to run workflow definition</FormDescription>
+                    <FormDescription>
+                      Enter params to run workflow definition
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -146,8 +170,13 @@ const RunNowAction: FC<Props> = ({ id }) => {
               Cancel
             </Button>
           </DialogClose>
-          <Button type="submit" form="run-now-form" onClick={onSubmit} disabled={runDefinition.status === 'pending'}>
-            {runDefinition.status === 'pending' ? <Spinner /> : null}
+          <Button
+            type="submit"
+            form="run-now-form"
+            onClick={onSubmit}
+            disabled={runDefinition.status === "pending"}
+          >
+            {runDefinition.status === "pending" ? <Spinner /> : null}
             Run Now
           </Button>
         </DialogFooter>

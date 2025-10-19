@@ -1,6 +1,7 @@
-import Layout from '@/components/layout/Layout';
-import { createRootRoute, Outlet } from '@tanstack/react-router';
-import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
+import Layout from "@/components/layout/Layout";
+import { createRootRoute, Outlet } from "@tanstack/react-router";
+import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 export const Route = createRootRoute({
   component: RootLayout,
@@ -8,7 +9,7 @@ export const Route = createRootRoute({
     console.error(error);
     return (
       <div>
-        <p>{error?.message ?? 'Something went wrong'}</p>
+        <p>{error?.message ?? "Something went wrong"}</p>
         <button
           type="button"
           onClick={() => {
@@ -27,6 +28,7 @@ function RootLayout() {
     <Layout>
       <Outlet />
       <TanStackRouterDevtools />
+      <ReactQueryDevtools />
     </Layout>
   );
 }
