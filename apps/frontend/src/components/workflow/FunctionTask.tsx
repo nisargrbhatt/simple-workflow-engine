@@ -91,6 +91,16 @@ const FunctionTask: FC<NodeProps<Props>> = ({ data, id, selected }) => {
       `
 type ResultMap = Record<${ResultMap}, unknown>;
 type GlobalMap = Record<${GlobalMap}, string>;
+type RuntimeInfo = {
+  /**
+   * Runtime Id
+   */ 
+  id: number;
+  /**
+   * Definition Id
+   */
+  definitionId: number;
+};
 /**
  * Global values
  */
@@ -99,6 +109,10 @@ declare var workflowGlobal: GlobalMap;
  * Results from other tasks
  */
 declare var workflowResults: ResultMap;
+/**
+ * Runtime info
+ */
+declare var workflowRuntime: RuntimeInfo;
 `,
       'global.d.ts'
     );

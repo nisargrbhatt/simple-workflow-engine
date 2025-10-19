@@ -1,4 +1,3 @@
-import type { LogEntry } from './log';
 import type { DefinitionTask } from './task';
 
 export interface RuntimeInfo {

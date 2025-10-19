@@ -1,5 +1,5 @@
 import type { LogPersistor } from '../../persistor/log';
-import type { DefinitionTask, ProcessorResult } from '../../types/index';
+import type { DefinitionTask, ProcessorResult, RuntimeInfo } from '../../types/index';
 
 export class EndProcessor {
   constructor(
@@ -8,6 +8,7 @@ export class EndProcessor {
       global: Record<string, any>;
       taskResults: Record<string, any>;
       logger: LogPersistor;
+      runtimeInfo: Pick<RuntimeInfo, 'id' | 'definitionId'>;
     }
   ) {}
 

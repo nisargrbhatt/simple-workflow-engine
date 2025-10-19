@@ -1,12 +1,14 @@
 import { safeAsync } from '@repo/utils';
 import type { LogPersistor } from '../../persistor/log';
 import vm from 'node:vm';
+import type { RuntimeInfo } from '../../types';
 
 export class WorkflowVM {
   constructor(
     public logger: LogPersistor,
     public globalValue: Record<string, any>,
-    public taskResults: Record<string, any>
+    public taskResults: Record<string, any>,
+    public runtimeInfo: Pick<RuntimeInfo, 'id' | 'definitionId'>
   ) {}
 
   async process<T = any>(
@@ -26,6 +28,7 @@ export class WorkflowVM {
       },
       workflowGlobal: this.globalValue,
       workflowResults: this.taskResults,
+      workflowRuntime: this.runtimeInfo,
     });
 
     const evalResult = await safeAsync(

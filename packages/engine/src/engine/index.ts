@@ -24,6 +24,11 @@ export class Engine {
       throw new Error('No runtime found. Please call setup first');
     }
 
+    const runtimeInfo = {
+      id: this.runtime.id,
+      definitionId: this.runtime.definitionId,
+    };
+
     const task = this.runtime?.tasks?.find((t) => t.id === taskId);
     if (!task) {
       throw new Error('Task not found');
@@ -51,6 +56,7 @@ export class Engine {
         global: this.runtime?.global,
         taskResults,
         logger,
+        runtimeInfo,
       });
 
       result = await safeAsync(processor.process());
@@ -61,6 +67,7 @@ export class Engine {
         global: this.runtime?.global,
         taskResults,
         logger,
+        runtimeInfo,
       });
 
       result = await safeAsync(processor.process());
@@ -71,6 +78,7 @@ export class Engine {
         global: this.runtime?.global,
         taskResults,
         logger,
+        runtimeInfo,
       });
 
       result = await safeAsync(processor.process());
@@ -80,6 +88,7 @@ export class Engine {
         global: this.runtime?.global,
         taskResults,
         logger,
+        runtimeInfo,
       });
 
       result = await safeAsync(processor.process());
