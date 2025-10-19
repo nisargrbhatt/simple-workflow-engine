@@ -1,8 +1,8 @@
-import { openApiClient } from "@lib/orpc";
-import { queryOptions } from "@tanstack/react-query";
-import { z } from "zod/v3";
+import { openApiClient } from '@lib/orpc';
+import { queryOptions } from '@tanstack/react-query';
+import { z } from 'zod/v3';
 
-export const queryKey = "fetch-edit-definition";
+export const queryKey = 'fetch-edit-definition';
 
 export const responseSchema = z.object({
   id: z.number(),
@@ -27,10 +27,7 @@ export const responseSchema = z.object({
     }),
 });
 
-export const fetchEditDefinition = async (params: {
-  signal?: AbortSignal;
-  definitionId: number;
-}) => {
+export const fetchEditDefinition = async (params: { signal?: AbortSignal; definitionId: number }) => {
   const response = await openApiClient.definition
     .fetchEdit(
       {
@@ -59,8 +56,7 @@ export const fetchEditDefinition = async (params: {
 export const fetchEditDefinitionQuery = (params: { definitionId: number }) =>
   queryOptions({
     queryKey: [queryKey, params.definitionId],
-    queryFn: ({ signal }) =>
-      fetchEditDefinition({ signal, definitionId: params.definitionId }),
+    queryFn: ({ signal }) => fetchEditDefinition({ signal, definitionId: params.definitionId }),
     gcTime: 0,
     staleTime: 0,
     refetchIntervalInBackground: false,

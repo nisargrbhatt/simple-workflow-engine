@@ -1,6 +1,6 @@
-import { openApiClient } from "@lib/orpc";
-import { queryOptions } from "@tanstack/react-query";
-import { z } from "zod/v3";
+import { openApiClient } from '@lib/orpc';
+import { queryOptions } from '@tanstack/react-query';
+import { z } from 'zod/v3';
 
 export const responseSchema = z.object({
   id: z.number(),
@@ -14,18 +14,15 @@ export const responseSchema = z.object({
       })
     )
     .catch([]),
-  status: z.enum(["active", "inactive"]),
-  type: z.enum(["template", "definition"]),
+  status: z.enum(['active', 'inactive']),
+  type: z.enum(['template', 'definition']),
   createdAt: z.string(),
   tasks: z.array(z.any()).catch([]),
 });
 
-export const queryKey = "fetch-definition";
+export const queryKey = 'fetch-definition';
 
-export const fetchDefinition = async (params: {
-  signal?: AbortSignal;
-  definitionId: number;
-}) => {
+export const fetchDefinition = async (params: { signal?: AbortSignal; definitionId: number }) => {
   const response = await openApiClient.definition
     .get(
       {
@@ -41,6 +38,5 @@ export const fetchDefinition = async (params: {
 export const fetchDefinitionQuery = (params: { definitionId: number }) =>
   queryOptions({
     queryKey: [queryKey, params.definitionId],
-    queryFn: ({ signal }) =>
-      fetchDefinition({ signal, definitionId: params.definitionId }),
+    queryFn: ({ signal }) => fetchDefinition({ signal, definitionId: params.definitionId }),
   });

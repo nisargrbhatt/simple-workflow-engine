@@ -1,23 +1,17 @@
-import { listRuntimeQuery } from "@/api/query/listRuntime";
-import SimplePagination from "@/components/helpers/SimplePagination";
-import { useEffect, type FC } from "react";
-import RuntimeCard from "./RuntimeCard";
-import { WorkflowIcon } from "lucide-react";
-import {
-  Empty,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle,
-} from "@/components/ui/empty";
-import { useNavigate, useParams, useSearch } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { listRuntimeQuery } from '@/api/query/listRuntime';
+import SimplePagination from '@/components/helpers/SimplePagination';
+import { useEffect, type FC } from 'react';
+import RuntimeCard from './RuntimeCard';
+import { WorkflowIcon } from 'lucide-react';
+import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
+import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
+import { useQuery } from '@tanstack/react-query';
 
 interface Props {}
 
 const RuntimeList: FC<Props> = () => {
-  const { definitionId } = useParams({ from: "/definitions/$definitionId/" });
-  const { page, size } = useSearch({ from: "/definitions/$definitionId/" });
+  const { definitionId } = useParams({ from: '/definitions/$definitionId/' });
+  const { page, size } = useSearch({ from: '/definitions/$definitionId/' });
   const navigate = useNavigate();
   const { data, isLoading, error } = useQuery(
     listRuntimeQuery({
@@ -42,21 +36,14 @@ const RuntimeList: FC<Props> = () => {
               <WorkflowIcon />
             </EmptyMedia>
             <EmptyTitle>No Runtimes Yet</EmptyTitle>
-            <EmptyDescription>
-              You haven&apos;t created any runtimes yet.
-            </EmptyDescription>
+            <EmptyDescription>You haven&apos;t created any runtimes yet.</EmptyDescription>
           </EmptyHeader>
         </Empty>
       ) : null}
       {data && !isLoading ? (
         <div className="grid w-full grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3">
           {data?.list?.map((i) => (
-            <RuntimeCard
-              key={i.id}
-              id={i.id}
-              workflowStatus={i.workflowStatus}
-              createdAt={i.createdAt}
-            />
+            <RuntimeCard key={i.id} id={i.id} workflowStatus={i.workflowStatus} createdAt={i.createdAt} />
           ))}
         </div>
       ) : null}
@@ -70,8 +57,8 @@ const RuntimeList: FC<Props> = () => {
             }}
             onChange={(newPage) => {
               navigate({
-                from: "/definitions/$definitionId",
-                to: "/definitions/$definitionId",
+                from: '/definitions/$definitionId',
+                to: '/definitions/$definitionId',
                 search: (prev) => ({
                   ...prev,
                   page: newPage,

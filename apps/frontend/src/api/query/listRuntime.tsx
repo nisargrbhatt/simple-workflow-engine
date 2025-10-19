@@ -1,12 +1,12 @@
-import { openApiClient } from "@lib/orpc";
-import { queryOptions } from "@tanstack/react-query";
-import z from "zod/v3";
+import { openApiClient } from '@lib/orpc';
+import { queryOptions } from '@tanstack/react-query';
+import z from 'zod/v3';
 
 export const responseSchema = z.object({
   list: z.array(
     z.object({
       id: z.number(),
-      workflowStatus: z.enum(["added", "pending", "completed", "failed"]),
+      workflowStatus: z.enum(['added', 'pending', 'completed', 'failed']),
       createdAt: z.string(),
     })
   ),
@@ -17,7 +17,7 @@ export const responseSchema = z.object({
   }),
 });
 
-export const queryKey = "list-runtime";
+export const queryKey = 'list-runtime';
 
 export const listRuntime = async (params: {
   signal?: AbortSignal;
@@ -51,12 +51,7 @@ export const listRuntimeQuery = (params: {
   };
 }) =>
   queryOptions({
-    queryKey: [
-      queryKey,
-      params.definitionId,
-      params.paginationState.page,
-      params.paginationState.size,
-    ],
+    queryKey: [queryKey, params.definitionId, params.paginationState.page, params.paginationState.size],
     queryFn: ({ signal }) =>
       listRuntime({
         signal,

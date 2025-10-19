@@ -1,8 +1,8 @@
-import type { useFetchRuntime } from '@/api/query/fetchRuntime';
+import type { fetchRuntime } from '@/api/query/fetchRuntime';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import type { FC } from 'react';
 
-type RuntimeDetailObject = NonNullable<ReturnType<typeof useFetchRuntime>['data']>;
+type RuntimeDetailObject = Awaited<ReturnType<typeof fetchRuntime>>;
 
 interface Props {
   task: RuntimeDetailObject['runtimeTasks'][number];

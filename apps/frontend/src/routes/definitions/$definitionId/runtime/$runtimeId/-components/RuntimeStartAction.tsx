@@ -1,5 +1,5 @@
 import { useProcessEngineMutation } from '@/api/mutation/processEngineMutation';
-import { type useFetchRuntime, queryKey } from '@/api/query/fetchRuntime';
+import { type fetchRuntime, queryKey } from '@/api/query/fetchRuntime';
 import { Button } from '@/components/ui/button';
 import { safeAsync } from '@repo/utils';
 import { useQueryClient } from '@tanstack/react-query';
@@ -7,7 +7,7 @@ import { Play } from 'lucide-react';
 import type { FC } from 'react';
 import { toast } from 'sonner';
 
-type RuntimeDetailObject = NonNullable<ReturnType<typeof useFetchRuntime>['data']>;
+type RuntimeDetailObject = Awaited<ReturnType<typeof fetchRuntime>>;
 
 interface Props {
   runtime: RuntimeDetailObject;

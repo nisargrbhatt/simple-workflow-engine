@@ -1,15 +1,16 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { useHealthCheck } from '@/api/query/healthCheck';
+import { healthCheckQuery } from '@/api/query/healthCheck';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
 
 export const Route = createFileRoute('/')({
   component: Index,
 });
 
 function Index() {
-  const { data, error, refetch, isFetching } = useHealthCheck();
+  const { data, error, refetch, isFetching } = useQuery(healthCheckQuery());
 
   useEffect(() => {
     if (error) {

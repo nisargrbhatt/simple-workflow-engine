@@ -1,5 +1,5 @@
 import { useDeleteDefinitionMutation } from '@/api/mutation/deleteDefinitionMutation';
-import { type useListDefinition, queryKey } from '@/api/query/listDefinition';
+import { type fetchDefinitionList, queryKey } from '@/api/query/listDefinition';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -15,7 +15,7 @@ import { useState, type FC } from 'react';
 import { toast } from 'sonner';
 import { TrashIcon } from 'lucide-react';
 
-type DefinitionObject = NonNullable<ReturnType<typeof useListDefinition>['query']['data']>['list'][number];
+type DefinitionObject = Awaited<ReturnType<typeof fetchDefinitionList>>['list'][number];
 
 interface Props {
   id: DefinitionObject['id'];
