@@ -1,17 +1,16 @@
 import { openApiClient } from '@lib/orpc';
-import { useQuery } from '@tanstack/react-query';
+import { queryOptions } from '@tanstack/react-query';
 
 export const queryKey = 'health-check';
 
-export const useHealthCheck = () => {
-  const healthCheck = useQuery({
-    queryKey: [queryKey],
-    queryFn: async () => {
-      const response = await openApiClient.health.liveness();
+export const healthCheck = async () => {
+  const response = await openApiClient.health.liveness();
 
-      return response;
-    },
-  });
-
-  return healthCheck;
+  return response;
 };
+
+export const healthCheckQuery = () =>
+  queryOptions({
+    queryKey: [queryKey],
+    queryFn: () => healthCheck(),
+  });

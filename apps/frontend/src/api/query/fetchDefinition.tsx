@@ -1,8 +1,8 @@
 import { openApiClient } from '@lib/orpc';
-import { useQuery } from '@tanstack/react-query';
+import { queryOptions } from '@tanstack/react-query';
 import { z } from 'zod/v3';
 
-const responseSchema = z.object({
+export const responseSchema = z.object({
   id: z.number(),
   name: z.string(),
   description: z.string(),
@@ -22,22 +22,21 @@ const responseSchema = z.object({
 
 export const queryKey = 'fetch-definition';
 
-export const useFetchDefinition = (definitionId: string) => {
-  const fetchDefinition = useQuery({
-    queryKey: [queryKey, definitionId],
-    queryFn: async ({ signal }) => {
-      const response = await openApiClient.definition
-        .get(
-          {
-            id: Number(definitionId),
-          },
-          { signal }
-        )
-        .then((res) => responseSchema.parse(res.data));
+export const fetchDefinition = async (params: { signal?: AbortSignal; definitionId: number }) => {
+  const response = await openApiClient.definition
+    .get(
+      {
+        id: params.definitionId,
+      },
+      { signal: params?.signal }
+    )
+    .then((res) => responseSchema.parse(res.data));
 
-      return response;
-    },
-  });
-
-  return fetchDefinition;
+  return response;
 };
+
+export const fetchDefinitionQuery = (params: { definitionId: number }) =>
+  queryOptions({
+    queryKey: [queryKey, params.definitionId],
+    queryFn: ({ signal }) => fetchDefinition({ signal, definitionId: params.definitionId }),
+  });

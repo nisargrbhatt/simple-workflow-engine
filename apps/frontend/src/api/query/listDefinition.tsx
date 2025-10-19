@@ -1,10 +1,10 @@
 import { openApiClient } from '@lib/orpc';
-import { useQuery } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router';
+import { queryOptions } from '@tanstack/react-query';
 import { z } from 'zod/v3';
 
-const responseSchema = z.object({
+export const queryKey = 'list-definition';
+
+export const responseSchema = z.object({
   list: z.array(
     z.object({
       id: z.number(),
@@ -21,44 +21,35 @@ const responseSchema = z.object({
   }),
 });
 
-export const queryKey = 'list-definition';
-
-export const useListDefinition = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const [paginationState, setPaginationState] = useState<{
+export const fetchDefinitionList = async (params: {
+  signal?: AbortSignal;
+  paginationState: {
     page: number;
     size: number;
-  }>({
-    page: Number(searchParams.get('page') ?? '1'),
-    size: Number(searchParams.get('size') ?? '10'),
-  });
+  };
+}) => {
+  const response = await openApiClient.definition
+    .list(
+      {
+        page: params.paginationState.page.toString(),
+        limit: params.paginationState.size.toString(),
+      },
+      {
+        signal: params.signal,
+      }
+    )
+    .then((res) => responseSchema.parse(res.data));
 
-  const listDefinition = useQuery({
-    queryKey: [queryKey, paginationState.page, paginationState.size],
-    queryFn: async ({ signal }) => {
-      const response = await openApiClient.definition
-        .list(
-          {
-            page: paginationState.page.toString(),
-            limit: paginationState.size.toString(),
-          },
-          {
-            signal,
-          }
-        )
-        .then((res) => responseSchema.parse(res.data));
-
-      return response;
-    },
-  });
-
-  useEffect(() => {
-    setSearchParams({
-      page: paginationState.page.toString(),
-      size: paginationState.size.toString(),
-    });
-  }, [paginationState, setSearchParams]);
-
-  return { query: listDefinition, paginationState, setPaginationState };
+  return response;
 };
+
+export const definitionListQuery = (params: {
+  paginationState: {
+    page: number;
+    size: number;
+  };
+}) =>
+  queryOptions({
+    queryKey: [queryKey, params.paginationState.page, params.paginationState.size],
+    queryFn: ({ signal }) => fetchDefinitionList({ signal, paginationState: params.paginationState }),
+  });

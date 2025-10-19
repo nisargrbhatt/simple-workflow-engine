@@ -1,25 +1,36 @@
-import { useListDefinition } from '@/api/query/listDefinition';
+import { definitionListQuery } from '@/api/query/listDefinition';
 import SimplePagination from '@/components/helpers/SimplePagination';
-import { Button } from '@/components/ui/button';
-import { PlusIcon, WorkflowIcon } from 'lucide-react';
-import type { FC } from 'react';
-import { useEffect } from 'react';
-import { Link } from 'react-router';
-import DefinitionCard from './__components/DefinitionCard';
+import { WorkflowIcon, PlusIcon } from 'lucide-react';
+import DefinitionCard from './-components/DefinitionCard';
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage } from '@/components/ui/breadcrumb';
+import { Button } from '@/components/ui/button';
+import { createFileRoute } from '@tanstack/react-router';
+import z from 'zod/v3';
+import { queryClient } from '@lib/queryClient';
+import { useSuspenseQuery } from '@tanstack/react-query';
 
-interface Props {}
+export const Route = createFileRoute('/definitions/')({
+  component: Index,
+  validateSearch: z.object({
+    page: z.coerce.number().int().min(1).catch(1).default(1),
+    size: z.coerce.number().int().min(1).max(10).catch(9).default(9),
+  }),
+  loaderDeps: (opts) => {
+    return {
+      paginationState: { page: opts.search.page, size: opts.search.size },
+    };
+  },
+  loader: ({ deps }) => queryClient.ensureQueryData(definitionListQuery({ paginationState: deps.paginationState })),
+  pendingComponent: () => <p>Loading...</p>,
+});
 
-const DefinitionsPage: FC<Props> = () => {
-  const { query, setPaginationState } = useListDefinition();
-  const { data, isLoading, error } = query;
-
-  useEffect(() => {
-    if (error) {
-      console.error(error);
-    }
-  }, [error]);
+function Index() {
+  const paginationState = Route.useSearch();
+  const {
+    data: { list, pagination },
+  } = useSuspenseQuery(definitionListQuery({ paginationState: paginationState }));
+  const navigate = Route.useNavigate();
 
   return (
     <div className="flex w-full flex-col items-start justify-start gap-2">
@@ -35,16 +46,14 @@ const DefinitionsPage: FC<Props> = () => {
       </h1>
       <p className="text-foreground max-w-2xl text-base font-light sm:text-lg">List of all definitions</p>
       <div className="flex flex-row items-center justify-start gap-1">
-        <Link to={'/definitions/create'}>
+        <Route.Link to={'/definitions/create'}>
           <Button>
             <PlusIcon /> Create
           </Button>
-        </Link>
+        </Route.Link>
       </div>
-
       <div className="flex w-full flex-col items-start justify-start gap-2">
-        {isLoading ? <p className="w-full text-center">Loading...</p> : null}
-        {data && !isLoading && data?.list?.length < 1 ? (
+        {list?.length < 1 ? (
           <Empty className="mx-auto">
             <EmptyHeader>
               <EmptyMedia variant="icon">
@@ -57,9 +66,9 @@ const DefinitionsPage: FC<Props> = () => {
             </EmptyHeader>
           </Empty>
         ) : null}
-        {data && !isLoading ? (
+        {list ? (
           <div className="grid w-full grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3">
-            {data?.list?.map((i) => (
+            {list?.map((i) => (
               <DefinitionCard
                 key={i.id}
                 id={i.id}
@@ -71,19 +80,21 @@ const DefinitionsPage: FC<Props> = () => {
             ))}
           </div>
         ) : null}
-        {data ? (
+        {pagination ? (
           <div className="flex w-full flex-row items-center justify-center">
             <SimplePagination
               pagination={{
-                page: data?.pagination?.page,
-                size: data?.pagination?.size,
-                total: data?.pagination?.total,
+                page: pagination?.page,
+                size: pagination?.size,
+                total: pagination?.total,
               }}
               onChange={(page) => {
-                setPaginationState((prev) => ({
-                  ...prev,
-                  page: page,
-                }));
+                navigate({
+                  search: (prev) => ({
+                    ...prev,
+                    page: page,
+                  }),
+                });
               }}
             />
           </div>
@@ -91,6 +102,4 @@ const DefinitionsPage: FC<Props> = () => {
       </div>
     </div>
   );
-};
-
-export default DefinitionsPage;
+}

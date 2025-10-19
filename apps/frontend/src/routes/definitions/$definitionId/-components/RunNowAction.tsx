@@ -1,5 +1,4 @@
 import { useRunDefinitionMutation } from '@/api/mutation/runDefinitionMutation';
-import type { useFetchDefinition } from '@/api/query/fetchDefinition';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -16,7 +15,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Editor } from '@monaco-editor/react';
 import type { FC } from 'react';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router';
 import { toast } from 'sonner';
 import { z } from 'zod/v3';
 import { safeAsync, safeSync } from '@repo/utils';
@@ -25,8 +23,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { queryKey } from '@/api/query/listRuntime';
 import { useTheme } from '@/contexts/ThemeContext';
 import { Spinner } from '@/components/ui/spinner';
-
-type DefinitionObject = NonNullable<ReturnType<typeof useFetchDefinition>['data']>;
+import { useNavigate, useParams } from '@tanstack/react-router';
 
 const formSchema = z.object({
   params: z.string().refine((val) => {
@@ -36,11 +33,11 @@ const formSchema = z.object({
   autoStart: z.boolean(),
 });
 
-interface Props {
-  id: DefinitionObject['id'];
-}
+interface Props {}
 
-const RunNowAction: FC<Props> = ({ id }) => {
+const RunNowAction: FC<Props> = () => {
+  const { definitionId } = useParams({ from: '/definitions/$definitionId/' });
+
   const { theme } = useTheme();
   const runDefinition = useRunDefinitionMutation();
   const navigate = useNavigate();
@@ -58,14 +55,20 @@ const RunNowAction: FC<Props> = ({ id }) => {
     await runDefinition.mutateAsync(
       {
         globalParams: JSON.parse(values.params),
-        definitionId: id,
+        definitionId: Number(definitionId),
         autoStart: values.autoStart,
       },
       {
         onSuccess: (data) => {
           toast.success('Engine started successfully');
           if (typeof data?.data?.id === 'number') {
-            navigate(`/definitions/${id}/runtime/${data?.data?.id}`);
+            navigate({
+              from: '/definitions/$definitionId',
+              to: '/definitions/$definitionId/runtime/$runtimeId',
+              params: {
+                runtimeId: String(data?.data?.id),
+              },
+            });
           }
           safeAsync(
             queryClient.invalidateQueries({

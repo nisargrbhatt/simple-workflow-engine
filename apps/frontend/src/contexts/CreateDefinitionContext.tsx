@@ -8,12 +8,12 @@ import { useFieldArray, useForm } from 'react-hook-form';
 import { z } from 'zod/v3';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useCreateDefinitionMutation } from '@/api/mutation/createDefinitionMutation';
-import { useNavigate } from 'react-router';
 import { toast } from 'sonner';
-import type { useFetchEditDefinition } from '@/api/query/fetchEditDefinition';
+import type { fetchEditDefinition } from '@/api/query/fetchEditDefinition';
 import { useEditDefinitionMutation } from '@/api/mutation/editDefinitionMutation';
+import { useNavigate } from '@tanstack/react-router';
 
-type FetchedDefinitionObject = NonNullable<ReturnType<typeof useFetchEditDefinition>['data']>;
+type FetchedDefinitionObject = Awaited<ReturnType<typeof fetchEditDefinition>>;
 
 const formSchema = z.object({
   name: z.string().trim().min(1, 'Name is required'),
@@ -148,7 +148,7 @@ const CreateDefinitionContextProvider: FC<Props> = ({ children, defaultValue }) 
         },
         {
           onSuccess: () => {
-            navigate('/definitions');
+            navigate({ to: '/definitions' });
           },
           onError: (error) => {
             console.error(error);
@@ -158,7 +158,7 @@ const CreateDefinitionContextProvider: FC<Props> = ({ children, defaultValue }) 
     } else {
       await mutateAsync(payload, {
         onSuccess: () => {
-          navigate('/definitions');
+          navigate({ to: '/definitions' });
         },
         onError: (error) => {
           console.error(error);

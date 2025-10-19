@@ -1,8 +1,10 @@
 import { openApiClient } from '@lib/orpc';
-import { useQuery } from '@tanstack/react-query';
+import { queryOptions } from '@tanstack/react-query';
 import z from 'zod/v3';
 
-const responseSchema = z.object({
+export const queryKey = 'fetch-runtime';
+
+export const responseSchema = z.object({
   id: z.number().describe('Runtime id'),
   workflowStatus: z.enum(['added', 'pending', 'completed', 'failed']).describe('Runtime status'),
   createdAt: z.string().describe('Runtime created at'),
@@ -39,26 +41,23 @@ const responseSchema = z.object({
     .catch([]),
 });
 
-export const queryKey = 'fetch-runtime';
+export const fetchRuntime = async (params: { signal?: AbortSignal; id: number }) => {
+  const response = await openApiClient.runtime
+    .get(
+      {
+        id: params.id,
+      },
+      {
+        signal: params?.signal,
+      }
+    )
+    .then((res) => responseSchema.parse(res.data));
 
-export const useFetchRuntime = (id: number) => {
-  const fetchRuntime = useQuery({
-    queryKey: [queryKey, id],
-    queryFn: async ({ signal }) => {
-      const response = await openApiClient.runtime
-        .get(
-          {
-            id,
-          },
-          {
-            signal,
-          }
-        )
-        .then((res) => responseSchema.parse(res.data));
-
-      return response;
-    },
-  });
-
-  return fetchRuntime;
+  return response;
 };
+
+export const fetchRuntimeQuery = (params: { id: number }) =>
+  queryOptions({
+    queryKey: [queryKey, params.id],
+    queryFn: ({ signal }) => fetchRuntime({ signal, id: params.id }),
+  });

@@ -1,4 +1,4 @@
-import type { useListDefinition } from '@/api/query/listDefinition';
+import type { responseSchema } from '@/api/query/listDefinition';
 import type { FC } from 'react';
 import {
   Card,
@@ -9,13 +9,14 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Link } from 'react-router';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import DefinitionDeleteButton from './DefinitionDeleteButton';
 import { EyeIcon, EditIcon } from 'lucide-react';
+import { Link } from '@tanstack/react-router';
+import type z from 'zod/v3';
 
-type DefinitionObject = NonNullable<ReturnType<typeof useListDefinition>['query']['data']>['list'][number];
+type DefinitionObject = z.infer<typeof responseSchema>['list'][number];
 
 interface Props {
   id: DefinitionObject['id'];
@@ -41,12 +42,12 @@ const DefinitionCard: FC<Props> = ({ id, name, description, status, createdAt })
     </CardContent>
     <CardFooter>
       <CardAction className="flex w-full flex-row items-center justify-end gap-2">
-        <Link to={`/definitions/${id}`}>
+        <Link to={'/definitions/$definitionId'} params={{ definitionId: id.toString() }}>
           <Button type="button" variant={'outline'} size="icon" title="View">
             <EyeIcon />
           </Button>
         </Link>
-        <Link to={`/definitions/create?definitionId=${id}`}>
+        <Link to={`/definitions/create`} search={{ definitionId: id }}>
           <Button type="button" variant={'outline'} size="icon" title="Edit">
             <EditIcon />
           </Button>

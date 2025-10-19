@@ -5,6 +5,7 @@ import { StartProcessor } from './processors/start';
 import { safeAsync } from '@repo/utils';
 import { EndProcessor } from './processors/end';
 import { FunctionProcessor } from './processors/function';
+import { GuardProcessor } from './processors/guard';
 
 export class Engine {
   runtime: RuntimeInfo | null = null;
@@ -73,6 +74,15 @@ export class Engine {
       });
 
       result = await safeAsync(processor.process());
+    } else if (task.type === 'GUARD') {
+      const processor = new GuardProcessor({
+        task,
+        global: this.runtime?.global,
+        taskResults,
+        logger,
+      });
+
+      result = await safeAsync(processor.process());
     } else {
       throw new Error('Invalid task type');
     }
@@ -99,6 +109,12 @@ export class Engine {
         const nextTasks = task.next;
 
         this._callNextTasks(nextTasks);
+      } else if (task.type === 'GUARD') {
+        if (result.data.result === true) {
+          const nextTasks = task.next;
+
+          this._callNextTasks(nextTasks);
+        }
       }
     }
   }

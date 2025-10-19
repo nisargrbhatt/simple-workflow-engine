@@ -1,11 +1,16 @@
 import { cn } from '@/lib/utils';
-import { Link, Outlet } from 'react-router';
 import { ModeToggle } from '../helpers/mode-toggle';
 import { WorkflowIcon } from 'lucide-react';
 import ContextFactory from '@/contexts/ContextFactory';
 import { Button } from '../ui/button';
+import type { FC, ReactNode } from 'react';
+import { Link } from '@tanstack/react-router';
 
-export function Layout() {
+interface Props {
+  children: ReactNode;
+}
+
+const Layout: FC<Props> = ({ children }) => {
   return (
     <ContextFactory>
       <div className={cn('bg-background flex min-h-screen flex-col')}>
@@ -23,9 +28,7 @@ export function Layout() {
             </nav>
           </div>
         </header>
-        <main className="container mx-auto flex-1 px-4 py-2">
-          <Outlet />
-        </main>
+        <main className="container mx-auto flex-1 px-4 py-2">{children}</main>
         <footer className="border-t py-6">
           <div className="container mx-auto flex items-center justify-between px-4">
             <ModeToggle />
@@ -41,4 +44,6 @@ export function Layout() {
       </div>
     </ContextFactory>
   );
-}
+};
+
+export default Layout;

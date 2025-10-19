@@ -1,12 +1,10 @@
-import { useFetchRuntime } from '@/api/query/fetchRuntime';
-import { useEffect, type FC } from 'react';
-import { Link, Navigate, useParams } from 'react-router';
-import RuntimeTaskCard from './__components/RuntimeTaskCard';
+import { fetchRuntimeQuery } from '@/api/query/fetchRuntime';
+import RuntimeTaskCard from './-components/RuntimeTaskCard';
 import { Button } from '@/components/ui/button';
 import { Calendar, RefreshCwIcon, ServerCrashIcon, WorkflowIcon } from 'lucide-react';
 import { cn } from '@lib/utils';
 import { Badge } from '@/components/ui/badge';
-import RuntimeStartAction from './__components/RuntimeStartAction';
+import RuntimeStartAction from './-components/RuntimeStartAction';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -16,31 +14,32 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { Item, ItemActions, ItemContent, ItemDescription, ItemMedia, ItemTitle } from '@/components/ui/item';
+import { createFileRoute, Link, notFound } from '@tanstack/react-router';
+import { queryClient } from '@lib/queryClient';
+import { ORPCError } from '@orpc/client';
+import { useSuspenseQuery } from '@tanstack/react-query';
 
-interface Props {}
-
-const RuntimeDetail: FC<Props> = () => {
-  const { id, definitionId } = useParams();
-
-  const { data, isLoading, error, refetch, isFetching } = useFetchRuntime(Number(id));
-
-  useEffect(() => {
-    if (error) {
-      console.error(error);
+export const Route = createFileRoute('/definitions/$definitionId/runtime/$runtimeId/')({
+  component: Index,
+  loader: ({ params }) => queryClient.ensureQueryData(fetchRuntimeQuery({ id: Number(params.runtimeId) })),
+  onError: (error) => {
+    if (error instanceof ORPCError && error.status === 404) {
+      throw notFound();
     }
-  }, [error]);
+  },
+  notFoundComponent: () => (
+    <div className="flex flex-col justify-center items-center gap-2 w-full h-full">
+      <p>Runtime not found.</p>
+      <Link to={'/definitions'}>
+        <Button type="button">Go back to definitions</Button>
+      </Link>
+    </div>
+  ),
+});
 
-  if (!id) {
-    return <Navigate to="/runtime" />;
-  }
-
-  if (isLoading) {
-    return (
-      <div className="flex w-full flex-col items-center justify-center">
-        <h3>Loading...</h3>
-      </div>
-    );
-  }
+function Index() {
+  const { runtimeId, definitionId } = Route.useParams();
+  const { data, refetch, isFetching } = useSuspenseQuery(fetchRuntimeQuery({ id: Number(runtimeId) }));
 
   return (
     <div className="w-full h-full flex flex-col justify-start items-start gap-1">
@@ -54,12 +53,14 @@ const RuntimeDetail: FC<Props> = () => {
           <BreadcrumbSeparator />
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
-              <Link to={`/definitions/${definitionId}`}>Definition {definitionId}</Link>
+              <Link from={'/definitions/$definitionId/runtime/$runtimeId'} to={`/definitions/$definitionId`}>
+                Definition {definitionId}
+              </Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>Runtime {id}</BreadcrumbPage>
+            <BreadcrumbPage>Runtime {runtimeId}</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
@@ -129,6 +130,4 @@ const RuntimeDetail: FC<Props> = () => {
       </div>
     </div>
   );
-};
-
-export default RuntimeDetail;
+}

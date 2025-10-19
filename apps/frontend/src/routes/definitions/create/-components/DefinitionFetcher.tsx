@@ -1,16 +1,16 @@
-import { useFetchEditDefinition } from '@/api/query/fetchEditDefinition';
+import { fetchEditDefinitionQuery } from '@/api/query/fetchEditDefinition';
 import CreateDefinitionContextProvider from '@/contexts/CreateDefinitionContext';
-import { ReactFlowProvider } from '@xyflow/react';
 import { useEffect, type FC } from 'react';
-import { Navigate } from 'react-router';
 import DefinitionForm from './DefinitionForm';
+import { useQuery } from '@tanstack/react-query';
+import { Navigate } from '@tanstack/react-router';
 
 interface Props {
-  definitionId: string;
+  definitionId: number;
 }
 
 const DefinitionFetcher: FC<Props> = ({ definitionId }) => {
-  const { data, isLoading, error } = useFetchEditDefinition(definitionId);
+  const { data, isLoading, error } = useQuery(fetchEditDefinitionQuery({ definitionId }));
 
   useEffect(() => {
     if (error) {
@@ -27,11 +27,9 @@ const DefinitionFetcher: FC<Props> = ({ definitionId }) => {
   }
 
   return (
-    <ReactFlowProvider>
-      <CreateDefinitionContextProvider defaultValue={data}>
-        <DefinitionForm />
-      </CreateDefinitionContextProvider>
-    </ReactFlowProvider>
+    <CreateDefinitionContextProvider defaultValue={data}>
+      <DefinitionForm />
+    </CreateDefinitionContextProvider>
   );
 };
 
