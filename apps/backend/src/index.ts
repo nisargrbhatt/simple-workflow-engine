@@ -1,18 +1,18 @@
-import { Hono } from 'hono';
-import { router } from './router';
-import { CORSPlugin } from '@orpc/server/plugins';
-import { ZodToJsonSchemaConverter } from '@orpc/zod';
-import { OpenAPIGenerator } from '@orpc/openapi';
-import { OpenAPIHandler } from '@orpc/openapi/fetch';
+import { Hono } from "hono";
+import { router } from "./router";
+import { CORSPlugin } from "@orpc/server/plugins";
+import { ZodToJsonSchemaConverter } from "@orpc/zod";
+import { OpenAPIGenerator } from "@orpc/openapi";
+import { OpenAPIHandler } from "@orpc/openapi/fetch";
 
 const app = new Hono();
 
 const openAPIHandler = new OpenAPIHandler(router, {
-  plugins: [new CORSPlugin()],
+	plugins: [new CORSPlugin()],
 });
 
 const openAPIGenerator = new OpenAPIGenerator({
-  schemaConverters: [new ZodToJsonSchemaConverter()],
+	schemaConverters: [new ZodToJsonSchemaConverter()],
 });
 
 const html = `
@@ -45,43 +45,43 @@ const html = `
   `;
 
 app.use(async (c) => {
-  const { matched, response } = await openAPIHandler.handle(c.req.raw, {
-    prefix: '/rpc',
-    context: {
-      req: c.req,
-    }, // Provide initial context if needed
-  });
+	const { matched, response } = await openAPIHandler.handle(c.req.raw, {
+		prefix: "/rpc",
+		context: {
+			req: c.req,
+		}, // Provide initial context if needed
+	});
 
-  if (matched) {
-    return c.newResponse(response.body, response);
-  }
+	if (matched) {
+		return c.newResponse(response.body, response);
+	}
 
-  if (c.req.path === '/spec.json') {
-    const spec = await openAPIGenerator.generate(router, {
-      info: {
-        title: 'Workflow Engine',
-        version: '1.0.0',
-      },
-      servers: [{ url: '/rpc' } /** Should use absolute URLs in production */],
-      components: {
-        securitySchemes: {
-          bearerAuth: {
-            type: 'http',
-            scheme: 'bearer',
-          },
-          apiKey: {
-            type: 'apiKey',
-            name: 'x-api-key',
-            in: 'header',
-          },
-        },
-      },
-    });
+	if (c.req.path === "/spec.json") {
+		const spec = await openAPIGenerator.generate(router, {
+			info: {
+				title: "Workflow Engine",
+				version: "1.0.0",
+			},
+			servers: [{ url: "/rpc" } /** Should use absolute URLs in production */],
+			components: {
+				securitySchemes: {
+					bearerAuth: {
+						type: "http",
+						scheme: "bearer",
+					},
+					apiKey: {
+						type: "apiKey",
+						name: "x-api-key",
+						in: "header",
+					},
+				},
+			},
+		});
 
-    return c.json(spec, 200);
-  }
+		return c.json(spec, 200);
+	}
 
-  return c.html(html);
+	return c.html(html);
 });
 
 export default app;

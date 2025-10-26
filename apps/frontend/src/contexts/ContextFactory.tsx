@@ -1,10 +1,12 @@
-import type { FC, ReactNode } from 'react';
-import ThemeContextProvider from './ThemeContext';
+import type { FC, ReactNode } from "react";
+import ThemeContextProvider from "./ThemeContext";
 
 interface Props {
-  children: ReactNode;
+	children: ReactNode;
 }
 
-const ContextFactory: FC<Props> = ({ children }) => <ThemeContextProvider>{children}</ThemeContextProvider>;
+const ContextFactory: FC<Props> = ({ children }) => (
+	<ThemeContextProvider>{children}</ThemeContextProvider>
+);
 
 export default ContextFactory;

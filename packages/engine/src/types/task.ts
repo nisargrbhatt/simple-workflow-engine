@@ -1,117 +1,117 @@
-import { RUNTIME_TASK_STATUS, TASK_TYPE } from './constant';
-import { z } from 'zod/v3';
+import { RUNTIME_TASK_STATUS, TASK_TYPE } from "./constant";
+import { z } from "zod/v3";
 
 const definitionStartTask = z.object({
-  id: z.string(),
-  name: z.string(),
-  type: z.literal(TASK_TYPE.START),
-  next: z.array(z.string()),
-  previous: z.array(z.string()),
-  status: z
-    .enum([
-      RUNTIME_TASK_STATUS.added,
-      RUNTIME_TASK_STATUS.pending,
-      RUNTIME_TASK_STATUS.completed,
-      RUNTIME_TASK_STATUS.failed,
-    ])
-    .default(RUNTIME_TASK_STATUS.added),
-  result: z.any().default({}),
+	id: z.string(),
+	name: z.string(),
+	type: z.literal(TASK_TYPE.START),
+	next: z.array(z.string()),
+	previous: z.array(z.string()),
+	status: z
+		.enum([
+			RUNTIME_TASK_STATUS.added,
+			RUNTIME_TASK_STATUS.pending,
+			RUNTIME_TASK_STATUS.completed,
+			RUNTIME_TASK_STATUS.failed,
+		])
+		.default(RUNTIME_TASK_STATUS.added),
+	result: z.any().default({}),
 });
 
 const definitionEndTask = z.object({
-  id: z.string(),
-  name: z.string(),
-  type: z.literal(TASK_TYPE.END),
-  next: z.array(z.string()),
-  previous: z.array(z.string()),
-  status: z
-    .enum([
-      RUNTIME_TASK_STATUS.added,
-      RUNTIME_TASK_STATUS.pending,
-      RUNTIME_TASK_STATUS.completed,
-      RUNTIME_TASK_STATUS.failed,
-    ])
-    .default(RUNTIME_TASK_STATUS.added),
-  result: z.any().default({}),
+	id: z.string(),
+	name: z.string(),
+	type: z.literal(TASK_TYPE.END),
+	next: z.array(z.string()),
+	previous: z.array(z.string()),
+	status: z
+		.enum([
+			RUNTIME_TASK_STATUS.added,
+			RUNTIME_TASK_STATUS.pending,
+			RUNTIME_TASK_STATUS.completed,
+			RUNTIME_TASK_STATUS.failed,
+		])
+		.default(RUNTIME_TASK_STATUS.added),
+	result: z.any().default({}),
 });
 
 const definitionFunctionTask = z.object({
-  id: z.string(),
-  name: z.string(),
-  type: z.literal(TASK_TYPE.FUNCTION),
-  exec: z.string(),
-  next: z.array(z.string()),
-  previous: z.array(z.string()),
-  status: z
-    .enum([
-      RUNTIME_TASK_STATUS.added,
-      RUNTIME_TASK_STATUS.pending,
-      RUNTIME_TASK_STATUS.completed,
-      RUNTIME_TASK_STATUS.failed,
-    ])
-    .default(RUNTIME_TASK_STATUS.added),
-  result: z.any().default({}),
+	id: z.string(),
+	name: z.string(),
+	type: z.literal(TASK_TYPE.FUNCTION),
+	exec: z.string(),
+	next: z.array(z.string()),
+	previous: z.array(z.string()),
+	status: z
+		.enum([
+			RUNTIME_TASK_STATUS.added,
+			RUNTIME_TASK_STATUS.pending,
+			RUNTIME_TASK_STATUS.completed,
+			RUNTIME_TASK_STATUS.failed,
+		])
+		.default(RUNTIME_TASK_STATUS.added),
+	result: z.any().default({}),
 });
 
 const definitionGuardTask = z.object({
-  id: z.string(),
-  name: z.string(),
-  type: z.literal(TASK_TYPE.GUARD),
-  exec: z.string(),
-  next: z.array(z.string()),
-  previous: z.array(z.string()),
-  status: z
-    .enum([
-      RUNTIME_TASK_STATUS.added,
-      RUNTIME_TASK_STATUS.pending,
-      RUNTIME_TASK_STATUS.completed,
-      RUNTIME_TASK_STATUS.failed,
-    ])
-    .default(RUNTIME_TASK_STATUS.added),
-  result: z.any().default({}),
+	id: z.string(),
+	name: z.string(),
+	type: z.literal(TASK_TYPE.GUARD),
+	exec: z.string(),
+	next: z.array(z.string()),
+	previous: z.array(z.string()),
+	status: z
+		.enum([
+			RUNTIME_TASK_STATUS.added,
+			RUNTIME_TASK_STATUS.pending,
+			RUNTIME_TASK_STATUS.completed,
+			RUNTIME_TASK_STATUS.failed,
+		])
+		.default(RUNTIME_TASK_STATUS.added),
+	result: z.any().default({}),
 });
 
 const definitionWaitTask = z.object({
-  id: z.string(),
-  name: z.string(),
-  type: z.literal(TASK_TYPE.WAIT),
-  next: z.array(z.string()),
-  previous: z.array(z.string()),
-  status: z
-    .enum([
-      RUNTIME_TASK_STATUS.added,
-      RUNTIME_TASK_STATUS.pending,
-      RUNTIME_TASK_STATUS.completed,
-      RUNTIME_TASK_STATUS.failed,
-    ])
-    .default(RUNTIME_TASK_STATUS.added),
-  result: z.any().default({}),
+	id: z.string(),
+	name: z.string(),
+	type: z.literal(TASK_TYPE.WAIT),
+	next: z.array(z.string()),
+	previous: z.array(z.string()),
+	status: z
+		.enum([
+			RUNTIME_TASK_STATUS.added,
+			RUNTIME_TASK_STATUS.pending,
+			RUNTIME_TASK_STATUS.completed,
+			RUNTIME_TASK_STATUS.failed,
+		])
+		.default(RUNTIME_TASK_STATUS.added),
+	result: z.any().default({}),
 });
 
 const definitionListenTask = z.object({
-  id: z.string(),
-  name: z.string(),
-  type: z.literal(TASK_TYPE.LISTEN),
-  next: z.array(z.string()),
-  previous: z.array(z.string()),
-  status: z
-    .enum([
-      RUNTIME_TASK_STATUS.added,
-      RUNTIME_TASK_STATUS.pending,
-      RUNTIME_TASK_STATUS.completed,
-      RUNTIME_TASK_STATUS.failed,
-    ])
-    .default(RUNTIME_TASK_STATUS.added),
-  result: z.any().default({}),
+	id: z.string(),
+	name: z.string(),
+	type: z.literal(TASK_TYPE.LISTEN),
+	next: z.array(z.string()),
+	previous: z.array(z.string()),
+	status: z
+		.enum([
+			RUNTIME_TASK_STATUS.added,
+			RUNTIME_TASK_STATUS.pending,
+			RUNTIME_TASK_STATUS.completed,
+			RUNTIME_TASK_STATUS.failed,
+		])
+		.default(RUNTIME_TASK_STATUS.added),
+	result: z.any().default({}),
 });
 
-export const definitionTask = z.discriminatedUnion('type', [
-  definitionStartTask,
-  definitionEndTask,
-  definitionFunctionTask,
-  definitionGuardTask,
-  definitionWaitTask,
-  definitionListenTask,
+export const definitionTask = z.discriminatedUnion("type", [
+	definitionStartTask,
+	definitionEndTask,
+	definitionFunctionTask,
+	definitionGuardTask,
+	definitionWaitTask,
+	definitionListenTask,
 ]);
 
 export const definitionTaskList = z.array(definitionTask);

@@ -1,13 +1,13 @@
 .features {
-  display: flex;
-  align-items: center;
-  padding: 2rem 0;
-  width: 100%;
+	display: flex;
+	align-items: center;
+	padding: 2rem 0;
+	width: 100%;
 }
 
 .featureSvg {
-  height: auto;
-  width: 400px;
-  aspect-ratio: 16 / 9;
-  object-fit: contain;
+	height: auto;
+	width: 400px;
+	aspect-ratio: 16 / 9;
+	object-fit: contain;
 }

@@ -1,1 +1,1 @@
-export { safeAsync, safeSync } from './safe';
+export { safeAsync, safeSync } from "./safe";
