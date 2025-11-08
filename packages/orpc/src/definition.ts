@@ -8,6 +8,7 @@ export const createDefinitionContract = oc
 		description: "It will create a new workflow definition",
 		summary: "Create Definition",
 		successStatus: 201,
+		tags: ["Definition"],
 	})
 	.input(
 		z.object({
@@ -50,6 +51,7 @@ export const updateDefinitionContract = oc
 		summary: "Update Definition",
 		successStatus: 200,
 		inputStructure: "detailed",
+		tags: ["Definition"],
 	})
 	.input(
 		z.object({
@@ -99,6 +101,7 @@ export const listDefinitionContract = oc
 		description: "It will list all workflow definitions",
 		summary: "List Definition",
 		successStatus: 200,
+		tags: ["Definition"],
 	})
 	.input(
 		z.object({
@@ -137,6 +140,7 @@ export const fetchEditDefinitionContract = oc
 		description: "It will fetch workflow definition for editing",
 		summary: "Fetch Edit Definition",
 		successStatus: 200,
+		tags: ["Definition"],
 	})
 	.input(
 		z.object({
@@ -178,6 +182,7 @@ export const deleteDefinitionContract = oc
 		description: "It will delete workflow definition",
 		summary: "Delete Definition",
 		successStatus: 200,
+		tags: ["Definition"],
 	})
 	.input(
 		z.object({
@@ -205,6 +210,7 @@ export const fetchDefinitionContract = oc
 		description: "It will fetch workflow definition",
 		summary: "Fetch Definition",
 		successStatus: 200,
+		tags: ["Definition"],
 	})
 	.input(
 		z.object({

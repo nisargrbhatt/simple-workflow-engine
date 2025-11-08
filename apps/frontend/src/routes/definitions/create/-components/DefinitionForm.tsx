@@ -16,6 +16,7 @@ import type { FC, FormEvent } from "react";
 import { useCallback } from "react";
 import DefinitionBasicDialog from "./DefinitionBasicDialog";
 import { Button } from "@/components/ui/button";
+import TaskAddButton from "@/components/workflow/TaskAddButton";
 
 interface Props {}
 
@@ -87,7 +88,10 @@ const DefinitionForm: FC<Props> = () => {
 		<form className="w-full" noValidate onSubmit={handleSubmit} id="create-definition-form">
 			<div className="flex w-full flex-col items-start justify-start gap-1">
 				<div className="flex w-full flex-row items-center justify-between gap-2">
-					<DefinitionBasicDialog />
+					<div className="flex flex-row items-center justify-start gap-2">
+						<DefinitionBasicDialog />
+						<TaskAddButton />
+					</div>
 					<Button type="submit" form="create-definition-form" variant={"default"}>
 						Submit
 					</Button>

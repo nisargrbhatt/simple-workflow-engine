@@ -7,6 +7,7 @@ export const livenessContract = oc
 		path: "/health/liveness",
 		description: "Liveness check",
 		summary: "Liveness",
+		tags: ["Health"],
 	})
 	.output(
 		z.object({
@@ -25,6 +26,7 @@ export const readinessContract = oc
 		path: "/health/readiness",
 		description: "Readiness check",
 		summary: "Readiness",
+		tags: ["Health"],
 	})
 	.output(
 		z.object({

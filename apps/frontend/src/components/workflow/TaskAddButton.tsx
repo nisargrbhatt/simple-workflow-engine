@@ -94,7 +94,7 @@ const TaskAddButton: FC<Props> = () => {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Button size="icon" variant="secondary" className="rounded-full">
+				<Button size="icon" variant="secondary" className="rounded-full" title="Add Task">
 					<Plus size={10} />
 				</Button>
 			</DropdownMenuTrigger>

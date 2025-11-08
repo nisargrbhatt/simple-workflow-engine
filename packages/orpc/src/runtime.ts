@@ -8,6 +8,7 @@ export const listRuntimeContract = oc
 		description: "It will list all workflow runtime",
 		summary: "List Runtime",
 		successStatus: 200,
+		tags: ["Runtime"],
 	})
 	.input(
 		z.object({
@@ -53,6 +54,7 @@ export const getRuntimeContract = oc
 		description: "It will get workflow runtime",
 		summary: "Get Runtime",
 		successStatus: 200,
+		tags: ["Runtime"],
 	})
 	.input(
 		z.object({

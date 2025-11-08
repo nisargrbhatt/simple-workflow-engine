@@ -8,6 +8,7 @@ export const startEngineContract = oc
 		description:
 			"It will start workflow engine for specified definition with addition of global params",
 		summary: "Workflow Engine Start",
+		tags: ["Engine"],
 	})
 	.input(
 		z.object({
@@ -39,6 +40,7 @@ export const processTaskContract = oc
 		path: "/engine/process",
 		description: "It will process workflow engine for specified task",
 		summary: "Workflow Engine Process",
+		tags: ["Engine"],
 	})
 	.input(
 		z.object({
