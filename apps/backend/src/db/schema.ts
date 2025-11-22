@@ -23,6 +23,7 @@ export const definitionTable = pgTable("definitions", {
 		.notNull(),
 	uiObject: json(),
 	tasks: json().$type<Array<DefinitionTask>>().notNull(),
+	userId: text(),
 	createdAt: date().defaultNow().notNull(),
 });
 

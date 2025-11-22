@@ -44,7 +44,7 @@ const formSchema = z.object({
 interface Props {}
 
 const RunNowAction: FC<Props> = () => {
-	const { definitionId } = useParams({ from: "/definitions/$definitionId/" });
+	const { definitionId } = useParams({ from: "/_authenticated/definitions/$definitionId/" });
 
 	const { theme } = useTheme();
 	const runDefinition = useRunDefinitionMutation();

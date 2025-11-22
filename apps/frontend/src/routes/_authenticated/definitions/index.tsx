@@ -21,7 +21,7 @@ import z from "zod/v3";
 import { queryClient } from "@lib/queryClient";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
-export const Route = createFileRoute("/definitions/")({
+export const Route = createFileRoute("/_authenticated/definitions/")({
 	component: Index,
 	validateSearch: z.object({
 		page: z.coerce.number().int().min(1).catch(1).default(1),

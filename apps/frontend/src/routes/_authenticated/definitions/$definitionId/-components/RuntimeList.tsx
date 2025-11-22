@@ -16,8 +16,8 @@ import { useQuery } from "@tanstack/react-query";
 interface Props {}
 
 const RuntimeList: FC<Props> = () => {
-	const { definitionId } = useParams({ from: "/definitions/$definitionId/" });
-	const { page, size } = useSearch({ from: "/definitions/$definitionId/" });
+	const { definitionId } = useParams({ from: "/_authenticated/definitions/$definitionId/" });
+	const { page, size } = useSearch({ from: "/_authenticated/definitions/$definitionId/" });
 	const navigate = useNavigate();
 	const { data, isLoading, error } = useQuery(
 		listRuntimeQuery({

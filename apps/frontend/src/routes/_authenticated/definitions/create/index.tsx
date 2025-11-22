@@ -9,7 +9,7 @@ import { queryClient } from "@lib/queryClient";
 import { fetchEditDefinitionQuery } from "@/api/query/fetchEditDefinition";
 import { safeAsync } from "@repo/utils";
 
-export const Route = createFileRoute("/definitions/create/")({
+export const Route = createFileRoute("/_authenticated/definitions/create/")({
 	component: Index,
 	validateSearch: z.object({
 		definitionId: z.coerce.number().optional(),

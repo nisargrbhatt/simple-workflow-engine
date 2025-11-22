@@ -4,6 +4,7 @@ import { CORSPlugin } from "@orpc/server/plugins";
 import { ZodToJsonSchemaConverter } from "@orpc/zod";
 import { OpenAPIGenerator } from "@orpc/openapi";
 import { OpenAPIHandler } from "@orpc/openapi/fetch";
+import { clerkMiddleware } from "@hono/clerk-auth";
 
 const app = new Hono();
 
@@ -44,12 +45,12 @@ const html = `
     </html>
   `;
 
+app.use("*", clerkMiddleware());
+
 app.use(async (c) => {
 	const { matched, response } = await openAPIHandler.handle(c.req.raw, {
 		prefix: "/rpc",
-		context: {
-			req: c.req,
-		}, // Provide initial context if needed
+		context: c, // Provide initial context if needed
 	});
 
 	if (matched) {

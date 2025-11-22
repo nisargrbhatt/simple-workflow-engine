@@ -4,9 +4,11 @@ import { contractOpenSpec } from "@lib/implementor";
 import { safeAsync } from "@repo/utils";
 import { and, asc, count, desc, eq } from "drizzle-orm";
 import { definitionTaskList } from "@repo/engine/types";
+import { privateAuth } from "@lib/procedures";
 
-export const createDefinition = contractOpenSpec.definition.create.handler(
-	async ({ input, errors }) => {
+export const createDefinition = contractOpenSpec.definition.create
+	.use(privateAuth)
+	.handler(async ({ input, errors }) => {
 		const parsedTask = definitionTaskList.safeParse(input.tasks);
 
 		if (!parsedTask.success) {
@@ -53,8 +55,7 @@ export const createDefinition = contractOpenSpec.definition.create.handler(
 				id: createdDefinitionId,
 			},
 		};
-	}
-);
+	});
 
 export const editDefinition = contractOpenSpec.definition.edit.handler(
 	async ({ input, errors }) => {
@@ -132,40 +133,44 @@ export const editDefinition = contractOpenSpec.definition.edit.handler(
 	}
 );
 
-export const listDefinition = contractOpenSpec.definition.list.handler(async ({ input }) => {
-	const list = await db.query.definition.findMany({
-		offset: (input.page - 1) * input.limit,
-		limit: input.limit,
-		where: eq(definitionTable.type, "definition"),
-		orderBy: [asc(definitionTable.status), desc(definitionTable.createdAt)],
-		columns: {
-			id: true,
-			name: true,
-			description: true,
-			status: true,
-			createdAt: true,
-		},
-	});
+export const listDefinition = contractOpenSpec.definition.list
+	.use(privateAuth)
+	.handler(async ({ input, context }) => {
+		const userId = context.auth.userId;
 
-	const totalCount = await db
-		.select({
-			count: count(),
-		})
-		.from(definitionTable)
-		.where(and(eq(definitionTable.status, "active"), eq(definitionTable.type, "definition")));
-
-	return {
-		message: "Definition listed successfully",
-		data: {
-			list,
-			pagination: {
-				total: totalCount?.at(0)?.count ?? 0,
-				page: input.page,
-				size: input.limit,
+		const list = await db.query.definition.findMany({
+			offset: (input.page - 1) * input.limit,
+			limit: input.limit,
+			where: and(eq(definitionTable.type, "definition"), eq(definitionTable.userId, userId)),
+			orderBy: [asc(definitionTable.status), desc(definitionTable.createdAt)],
+			columns: {
+				id: true,
+				name: true,
+				description: true,
+				status: true,
+				createdAt: true,
 			},
-		},
-	};
-});
+		});
+
+		const totalCount = await db
+			.select({
+				count: count(),
+			})
+			.from(definitionTable)
+			.where(and(eq(definitionTable.status, "active"), eq(definitionTable.type, "definition")));
+
+		return {
+			message: "Definition listed successfully",
+			data: {
+				list,
+				pagination: {
+					total: totalCount?.at(0)?.count ?? 0,
+					page: input.page,
+					size: input.limit,
+				},
+			},
+		};
+	});
 
 export const fetchEditDefinition = contractOpenSpec.definition.fetchEdit.handler(
 	async ({ input, errors }) => {
