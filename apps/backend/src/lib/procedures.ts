@@ -1,56 +1,49 @@
+import { ORPCError } from "@orpc/server";
 import { getAuth } from "@hono/clerk-auth";
-import { oo } from "@orpc/openapi";
-import { ORPCError, os } from "@orpc/server";
-import { HonoContext } from "./type";
+import { contractOpenSpec } from "./implementor";
 
 const internalApiKey = process.env.SERVER_KEY;
 
-export const internalAuth = oo.spec(
-	os.$context<HonoContext>().middleware(({ context, next }) => {
-		const apiKey = context?.internal?.apiKey;
-
-		if (!apiKey) {
-			throw new ORPCError("UNAUTHORIZED", {
-				message: "No `x-api-key` Header Found",
-			});
-		}
-
-		if (apiKey !== internalApiKey) {
-			throw new ORPCError("UNAUTHORIZED", {
-				message: "Invalid API Key",
-			});
-		}
-
-		return next();
-	}),
-	{
-		security: [{ apiKey: [] }],
-	}
-);
-
-export const privateAuth = oo.spec(
-	os.$context<HonoContext>().middleware(({ context, next }) => {
-		if (!context.honoContext) {
-			throw new ORPCError("UNAUTHORIZED", {
-				message: "Unauthorized",
-			});
-		}
-
-		const auth = getAuth(context.honoContext);
-
-		if (!auth?.userId) {
-			throw new ORPCError("UNAUTHORIZED", {
-				message: "Unauthorized",
-			});
-		}
-
-		return next({
-			context: {
-				auth: auth,
-			},
+export const privateAuthSpec = contractOpenSpec.use(({ context, next }) => {
+	if (!context?.honoContext) {
+		throw new ORPCError("UNAUTHORIZED", {
+			message: "Unauthorized",
 		});
-	}),
-	{
-		security: [{ bearerAuth: [] }],
 	}
-);
+
+	const auth = getAuth(context.honoContext);
+
+	if (!auth?.userId) {
+		throw new ORPCError("UNAUTHORIZED", {
+			message: "Unauthorized",
+		});
+	}
+
+	const authClaims = {
+		userId: auth.userId,
+	};
+
+	return next({
+		context: {
+			auth: authClaims,
+		},
+	});
+});
+
+export const internalAuthSpec = contractOpenSpec.use(({ context, next }) => {
+	const apiKey = context?.internal?.apiKey;
+
+	if (!apiKey) {
+		throw new ORPCError("UNAUTHORIZED", {
+			message: "No `x-api-key` Header Found",
+		});
+	}
+
+	if (apiKey !== internalApiKey) {
+		throw new ORPCError("UNAUTHORIZED", {
+			message: "Invalid API Key",
+		});
+	}
+
+	return next();
+});

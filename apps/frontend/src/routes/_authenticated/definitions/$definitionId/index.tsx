@@ -26,7 +26,8 @@ export const Route = createFileRoute("/_authenticated/definitions/$definitionId/
 	loaderDeps: (opts) => ({
 		paginationState: { page: opts.search.page, size: opts.search.size },
 	}),
-	loader: ({ params, deps }) => Promise.all([
+	loader: ({ params, deps }) =>
+		Promise.all([
 			queryClient.ensureQueryData(
 				fetchDefinitionQuery({ definitionId: Number(params.definitionId) })
 			),

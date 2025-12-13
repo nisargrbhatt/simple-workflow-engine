@@ -1,16 +1,14 @@
 import { db } from "@db/index";
 import { definitionTable, runtimeTable, runtimeTaskTable } from "@db/schema";
 import { DbPostgresPersistor } from "@engine/postgres";
-import { contractOpenSpec } from "@lib/implementor";
-import { internalAuth, privateAuth } from "@lib/procedures";
+import { internalAuthSpec, privateAuthSpec } from "@lib/procedures";
 import { Engine } from "@repo/engine/engine";
 import { definitionTaskList } from "@repo/engine/types";
 import { safeAsync } from "@repo/utils";
 import { and, eq, not } from "drizzle-orm";
 
-export const startEngine = contractOpenSpec.engine.start
-	.use(privateAuth)
-	.handler(async ({ input, errors, context }) => {
+export const startEngine = privateAuthSpec.engine.start.handler(
+	async ({ input, errors, context }) => {
 		const userId = context.auth.userId;
 
 		const definitionResult = await safeAsync(
@@ -118,11 +116,11 @@ export const startEngine = contractOpenSpec.engine.start
 			},
 			message: "Runtime Engine created successfully",
 		};
-	});
+	}
+);
 
-export const processTask = contractOpenSpec.engine.process
-	.use(privateAuth)
-	.handler(async ({ input, errors, context }) => {
+export const processTask = privateAuthSpec.engine.process.handler(
+	async ({ input, errors, context }) => {
 		const userId = context.auth.userId;
 
 		const runtimeResult = await safeAsync(
@@ -224,10 +222,10 @@ export const processTask = contractOpenSpec.engine.process
 		return {
 			message: "Task processing started successfully",
 		};
-	});
+	}
+);
 
-export const processTaskInternal = contractOpenSpec.engine.processInternal
-	.use(internalAuth)
+export const processTaskInternal = internalAuthSpec.engine.processInternal
 	.handler(async ({ input, errors }) => {
 		const runtimeResult = await safeAsync(
 			db.query.runtime.findFirst({

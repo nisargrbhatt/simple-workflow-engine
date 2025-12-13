@@ -1,14 +1,12 @@
 import { db } from "@db/index";
 import { definitionTable } from "@db/schema";
-import { contractOpenSpec } from "@lib/implementor";
 import { safeAsync } from "@repo/utils";
 import { and, asc, count, desc, eq } from "drizzle-orm";
 import { definitionTaskList } from "@repo/engine/types";
-import { privateAuth } from "@lib/procedures";
+import { privateAuthSpec } from "@lib/procedures";
 
-export const createDefinition = contractOpenSpec.definition.create
-	.use(privateAuth)
-	.handler(async ({ input, context, errors }) => {
+export const createDefinition = privateAuthSpec.definition.create.handler(
+	async ({ input, context, errors }) => {
 		const userId = context.auth.userId;
 		const parsedTask = definitionTaskList.safeParse(input.tasks);
 
@@ -57,11 +55,11 @@ export const createDefinition = contractOpenSpec.definition.create
 				id: createdDefinitionId,
 			},
 		};
-	});
+	}
+);
 
-export const editDefinition = contractOpenSpec.definition.edit
-	.use(privateAuth)
-	.handler(async ({ input, errors, context }) => {
+export const editDefinition = privateAuthSpec.definition.edit.handler(
+	async ({ input, errors, context }) => {
 		const userId = context.auth.userId;
 		const parsedTask = definitionTaskList.safeParse(input.body.tasks);
 
@@ -137,11 +135,11 @@ export const editDefinition = contractOpenSpec.definition.edit
 				id: updatedDefinitionId,
 			},
 		};
-	});
+	}
+);
 
-export const listDefinition = contractOpenSpec.definition.list
-	.use(privateAuth)
-	.handler(async ({ input, context }) => {
+export const listDefinition = privateAuthSpec.definition.list.handler(
+	async ({ input, context }) => {
 		const userId = context.auth.userId;
 
 		const list = await db.query.definition.findMany({
@@ -176,11 +174,11 @@ export const listDefinition = contractOpenSpec.definition.list
 				},
 			},
 		};
-	});
+	}
+);
 
-export const fetchEditDefinition = contractOpenSpec.definition.fetchEdit
-	.use(privateAuth)
-	.handler(async ({ input, errors, context }) => {
+export const fetchEditDefinition = privateAuthSpec.definition.fetchEdit.handler(
+	async ({ input, errors, context }) => {
 		const userId = context.auth.userId;
 
 		const result = await safeAsync(
@@ -213,11 +211,11 @@ export const fetchEditDefinition = contractOpenSpec.definition.fetchEdit
 			message: "Definition fetched successfully",
 			data: result.data,
 		};
-	});
+	}
+);
 
-export const deleteDefinition = contractOpenSpec.definition.delete
-	.use(privateAuth)
-	.handler(async ({ errors, input, context }) => {
+export const deleteDefinition = privateAuthSpec.definition.delete.handler(
+	async ({ errors, input, context }) => {
 		const userId = context.auth.userId;
 
 		const definitionResult = await safeAsync(
@@ -262,11 +260,11 @@ export const deleteDefinition = contractOpenSpec.definition.delete
 		return {
 			message: "Definition deleted successfully",
 		};
-	});
+	}
+);
 
-export const fetchDefinition = contractOpenSpec.definition.get
-	.use(privateAuth)
-	.handler(async ({ input, errors, context }) => {
+export const fetchDefinition = privateAuthSpec.definition.get.handler(
+	async ({ input, errors, context }) => {
 		const userId = context.auth.userId;
 
 		const result = await safeAsync(
@@ -302,4 +300,5 @@ export const fetchDefinition = contractOpenSpec.definition.get
 			message: "Definition fetched successfully",
 			data: result.data,
 		};
-	});
+	}
+);

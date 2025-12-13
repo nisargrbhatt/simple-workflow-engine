@@ -1,13 +1,11 @@
 import { db } from "@db/index";
 import { definitionTable, runtimeLogTable, runtimeTable, runtimeTaskTable } from "@db/schema";
-import { contractOpenSpec } from "@lib/implementor";
-import { privateAuth } from "@lib/procedures";
+import { privateAuthSpec } from "@lib/procedures";
 import { safeAsync } from "@repo/utils";
 import { and, count, desc, eq } from "drizzle-orm";
 
-export const listRuntime = contractOpenSpec.runtime.list
-	.use(privateAuth)
-	.handler(async ({ input, errors, context }) => {
+export const listRuntime = privateAuthSpec.runtime.list.handler(
+	async ({ input, errors, context }) => {
 		const userId = context.auth.userId;
 
 		const definitionResult = await safeAsync(
@@ -83,12 +81,12 @@ export const listRuntime = contractOpenSpec.runtime.list
 				},
 			},
 		};
-	});
+	}
+);
 
-export const getRuntime = contractOpenSpec.runtime.get
-	.use(privateAuth)
-	.handler(async ({ input, errors, context }) => {
-		const userId = context.auth.userId;
+export const getRuntime = privateAuthSpec.runtime.get.handler(
+	async ({ input, errors, context }) => {
+		const userId = context?.auth?.userId;
 
 		const runtimeResult = await safeAsync(
 			db.query.runtime.findFirst({
@@ -172,4 +170,5 @@ export const getRuntime = contractOpenSpec.runtime.get
 				runtimeLogs: runtimeLogs,
 			},
 		};
-	});
+	}
+);
