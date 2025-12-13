@@ -28,8 +28,10 @@ jobs:
             ${{ runner.os }}-turbo-
       - name: Install Dependencies
         run: bun install
-      - name: Create Env file
-        run: echo "VITE_BACKEND_URL=${{ secrets.VITE_BACKEND_URL }} \n VITE_CLERK_PUBLISHABLE_KEY=${{ secrets.VITE_CLERK_PUBLISHABLE_KEY }}" > apps/frontend/.env
+      - name: Create VITE_BACKEND_URL in env file
+        run: echo "VITE_BACKEND_URL=${{ secrets.VITE_BACKEND_URL }}" >> apps/frontend/.env
+      - name: Add VITE_CLERK_PUBLISHABLE_KEY in env file
+        run: echo "VITE_CLERK_PUBLISHABLE_KEY=${{ secrets.VITE_CLERK_PUBLISHABLE_KEY }}" >> apps/frontend/.env
       - name: Env file
         run: cat apps/frontend/.env
       - name: Build
