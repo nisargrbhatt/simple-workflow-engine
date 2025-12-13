@@ -1,13 +1,13 @@
 import { getAuth } from "@hono/clerk-auth";
 import { oo } from "@orpc/openapi";
 import { ORPCError, os } from "@orpc/server";
-import type { Context } from "hono";
+import { HonoContext } from "./type";
 
 const internalApiKey = process.env.SERVER_KEY;
 
 export const internalAuth = oo.spec(
-	os.$context<Context>().middleware(({ context, next }) => {
-		const apiKey = context?.req?.header("x-api-key");
+	os.$context<HonoContext>().middleware(({ context, next }) => {
+		const apiKey = context?.internal?.apiKey;
 
 		if (!apiKey) {
 			throw new ORPCError("UNAUTHORIZED", {
@@ -29,8 +29,14 @@ export const internalAuth = oo.spec(
 );
 
 export const privateAuth = oo.spec(
-	os.$context<Context>().middleware(({ context, next }) => {
-		const auth = getAuth(context);
+	os.$context<HonoContext>().middleware(({ context, next }) => {
+		if (!context.honoContext) {
+			throw new ORPCError("UNAUTHORIZED", {
+				message: "Unauthorized",
+			});
+		}
+
+		const auth = getAuth(context.honoContext);
 
 		if (!auth?.userId) {
 			throw new ORPCError("UNAUTHORIZED", {
@@ -48,11 +54,3 @@ export const privateAuth = oo.spec(
 		security: [{ bearerAuth: [] }],
 	}
 );
-
-export const publicProcedures = oo.spec(os.$context<Context>(), {
-	security: [],
-});
-
-export const privateProcedures = os.$context<Context>().use(privateAuth);
-
-export const internalProcedures = os.$context<Context>().use(internalAuth);

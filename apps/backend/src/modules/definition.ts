@@ -8,7 +8,8 @@ import { privateAuth } from "@lib/procedures";
 
 export const createDefinition = contractOpenSpec.definition.create
 	.use(privateAuth)
-	.handler(async ({ input, errors }) => {
+	.handler(async ({ input, context, errors }) => {
+		const userId = context.auth.userId;
 		const parsedTask = definitionTaskList.safeParse(input.tasks);
 
 		if (!parsedTask.success) {
@@ -28,6 +29,7 @@ export const createDefinition = contractOpenSpec.definition.create
 					status: input.status,
 					type: input.type,
 					uiObject: input.uiObject,
+					userId: userId,
 				})
 				.returning({
 					id: definitionTable.id,
@@ -57,8 +59,10 @@ export const createDefinition = contractOpenSpec.definition.create
 		};
 	});
 
-export const editDefinition = contractOpenSpec.definition.edit.handler(
-	async ({ input, errors }) => {
+export const editDefinition = contractOpenSpec.definition.edit
+	.use(privateAuth)
+	.handler(async ({ input, errors, context }) => {
+		const userId = context.auth.userId;
 		const parsedTask = definitionTaskList.safeParse(input.body.tasks);
 
 		if (!parsedTask.success) {
@@ -69,7 +73,10 @@ export const editDefinition = contractOpenSpec.definition.edit.handler(
 
 		const definitionResult = await safeAsync(
 			db.query.definition.findFirst({
-				where: eq(definitionTable.id, Number(input.params.id)),
+				where: and(
+					eq(definitionTable.id, Number(input.params.id)),
+					eq(definitionTable.userId, userId)
+				),
 				columns: {
 					id: true,
 				},
@@ -130,8 +137,7 @@ export const editDefinition = contractOpenSpec.definition.edit.handler(
 				id: updatedDefinitionId,
 			},
 		};
-	}
-);
+	});
 
 export const listDefinition = contractOpenSpec.definition.list
 	.use(privateAuth)
@@ -172,11 +178,14 @@ export const listDefinition = contractOpenSpec.definition.list
 		};
 	});
 
-export const fetchEditDefinition = contractOpenSpec.definition.fetchEdit.handler(
-	async ({ input, errors }) => {
+export const fetchEditDefinition = contractOpenSpec.definition.fetchEdit
+	.use(privateAuth)
+	.handler(async ({ input, errors, context }) => {
+		const userId = context.auth.userId;
+
 		const result = await safeAsync(
 			db.query.definition.findFirst({
-				where: eq(definitionTable.id, Number(input.id)),
+				where: and(eq(definitionTable.id, Number(input.id)), eq(definitionTable.userId, userId)),
 				columns: {
 					id: true,
 					global: true,
@@ -204,14 +213,16 @@ export const fetchEditDefinition = contractOpenSpec.definition.fetchEdit.handler
 			message: "Definition fetched successfully",
 			data: result.data,
 		};
-	}
-);
+	});
 
-export const deleteDefinition = contractOpenSpec.definition.delete.handler(
-	async ({ errors, input }) => {
+export const deleteDefinition = contractOpenSpec.definition.delete
+	.use(privateAuth)
+	.handler(async ({ errors, input, context }) => {
+		const userId = context.auth.userId;
+
 		const definitionResult = await safeAsync(
 			db.query.definition.findFirst({
-				where: eq(definitionTable.id, Number(input.id)),
+				where: and(eq(definitionTable.id, Number(input.id)), eq(definitionTable.userId, userId)),
 				columns: {
 					id: true,
 				},
@@ -251,14 +262,16 @@ export const deleteDefinition = contractOpenSpec.definition.delete.handler(
 		return {
 			message: "Definition deleted successfully",
 		};
-	}
-);
+	});
 
-export const fetchDefinition = contractOpenSpec.definition.get.handler(
-	async ({ input, errors }) => {
+export const fetchDefinition = contractOpenSpec.definition.get
+	.use(privateAuth)
+	.handler(async ({ input, errors, context }) => {
+		const userId = context.auth.userId;
+
 		const result = await safeAsync(
 			db.query.definition.findFirst({
-				where: eq(definitionTable.id, Number(input.id)),
+				where: and(eq(definitionTable.id, Number(input.id)), eq(definitionTable.userId, userId)),
 				columns: {
 					id: true,
 					global: true,
@@ -289,5 +302,4 @@ export const fetchDefinition = contractOpenSpec.definition.get.handler(
 			message: "Definition fetched successfully",
 			data: result.data,
 		};
-	}
-);
+	});

@@ -19,6 +19,7 @@ export const contractRouter = {
 	engine: oc.router({
 		start: startEngineContract,
 		process: processTaskContract,
+		processInternal: processTaskContract,
 	}),
 	definition: oc.router({
 		create: createDefinitionContract,

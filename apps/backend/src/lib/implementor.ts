@@ -1,5 +1,5 @@
 import { implement } from "@orpc/server";
 import { contractRouter } from "@repo/orpc";
-import type { Context } from "hono";
+import { HonoContext } from "./type";
 
-export const contractOpenSpec = implement(contractRouter).$context<Context>();
+export const contractOpenSpec = implement(contractRouter).$context<HonoContext>();

@@ -50,7 +50,7 @@ app.use("*", clerkMiddleware());
 app.use(async (c) => {
 	const { matched, response } = await openAPIHandler.handle(c.req.raw, {
 		prefix: "/rpc",
-		context: c, // Provide initial context if needed
+		context: { honoContext: c }, // Provide initial context if needed
 	});
 
 	if (matched) {

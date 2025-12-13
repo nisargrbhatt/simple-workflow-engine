@@ -10,7 +10,7 @@ import {
 	definitionTaskList,
 } from "@repo/engine/types";
 import { and, eq } from "drizzle-orm";
-import { processTask } from "@modules/engine";
+import { processTaskInternal } from "@modules/engine";
 
 export class DbPostgresPersistor extends WorkflowPersistor {
 	async getRuntime(runtimeId: number): Promise<RuntimeInfo> {
@@ -81,7 +81,7 @@ export class DbPostgresPersistor extends WorkflowPersistor {
 	}
 
 	async nextTaskCaller(runtimeId: number, taskId: string): Promise<void> {
-		await processTask({
+		await processTaskInternal({
 			runtimeId,
 			taskId,
 		});
