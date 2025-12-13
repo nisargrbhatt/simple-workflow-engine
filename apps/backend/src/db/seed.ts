@@ -12,6 +12,7 @@ async function seed() {
 			status: "active",
 			type: "template",
 			uiObject: {},
+			userId: "abcd",
 		},
 	]);
 }

@@ -7,6 +7,12 @@ import { createTanstackQueryUtils } from "@orpc/tanstack-query";
 
 const link = new OpenAPILink(contractRouter, {
 	url: `${import.meta.env.VITE_BACKEND_URL}/rpc`,
+	headers: () => {
+		const token = localStorage.getItem("token");
+		return {
+			Authorization: ["Bearer", token].join(" "),
+		};
+	},
 });
 
 export const openApiClient: JsonifiedClient<ContractRouterClient<typeof contractRouter>> =

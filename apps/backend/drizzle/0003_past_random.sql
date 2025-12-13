@@ -1,0 +1,1 @@
+ALTER TABLE "definitions" ALTER COLUMN "userId" SET NOT NULL;

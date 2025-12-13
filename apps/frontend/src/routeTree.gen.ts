@@ -9,66 +9,84 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as DefinitionsIndexRouteImport } from './routes/definitions/index'
-import { Route as DefinitionsCreateIndexRouteImport } from './routes/definitions/create/index'
-import { Route as DefinitionsDefinitionIdIndexRouteImport } from './routes/definitions/$definitionId/index'
-import { Route as DefinitionsDefinitionIdRuntimeRuntimeIdIndexRouteImport } from './routes/definitions/$definitionId/runtime/$runtimeId/index'
+import { Route as SignInIndexRouteImport } from './routes/sign-in/index'
+import { Route as AuthenticatedDefinitionsIndexRouteImport } from './routes/_authenticated/definitions/index'
+import { Route as AuthenticatedDefinitionsCreateIndexRouteImport } from './routes/_authenticated/definitions/create/index'
+import { Route as AuthenticatedDefinitionsDefinitionIdIndexRouteImport } from './routes/_authenticated/definitions/$definitionId/index'
+import { Route as AuthenticatedDefinitionsDefinitionIdRuntimeRuntimeIdIndexRouteImport } from './routes/_authenticated/definitions/$definitionId/runtime/$runtimeId/index'
 
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DefinitionsIndexRoute = DefinitionsIndexRouteImport.update({
-  id: '/definitions/',
-  path: '/definitions/',
+const SignInIndexRoute = SignInIndexRouteImport.update({
+  id: '/sign-in/',
+  path: '/sign-in/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DefinitionsCreateIndexRoute = DefinitionsCreateIndexRouteImport.update({
-  id: '/definitions/create/',
-  path: '/definitions/create/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DefinitionsDefinitionIdIndexRoute =
-  DefinitionsDefinitionIdIndexRouteImport.update({
+const AuthenticatedDefinitionsIndexRoute =
+  AuthenticatedDefinitionsIndexRouteImport.update({
+    id: '/definitions/',
+    path: '/definitions/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDefinitionsCreateIndexRoute =
+  AuthenticatedDefinitionsCreateIndexRouteImport.update({
+    id: '/definitions/create/',
+    path: '/definitions/create/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDefinitionsDefinitionIdIndexRoute =
+  AuthenticatedDefinitionsDefinitionIdIndexRouteImport.update({
     id: '/definitions/$definitionId/',
     path: '/definitions/$definitionId/',
-    getParentRoute: () => rootRouteImport,
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const DefinitionsDefinitionIdRuntimeRuntimeIdIndexRoute =
-  DefinitionsDefinitionIdRuntimeRuntimeIdIndexRouteImport.update({
+const AuthenticatedDefinitionsDefinitionIdRuntimeRuntimeIdIndexRoute =
+  AuthenticatedDefinitionsDefinitionIdRuntimeRuntimeIdIndexRouteImport.update({
     id: '/definitions/$definitionId/runtime/$runtimeId/',
     path: '/definitions/$definitionId/runtime/$runtimeId/',
-    getParentRoute: () => rootRouteImport,
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/definitions': typeof DefinitionsIndexRoute
-  '/definitions/$definitionId': typeof DefinitionsDefinitionIdIndexRoute
-  '/definitions/create': typeof DefinitionsCreateIndexRoute
-  '/definitions/$definitionId/runtime/$runtimeId': typeof DefinitionsDefinitionIdRuntimeRuntimeIdIndexRoute
+  '/sign-in': typeof SignInIndexRoute
+  '/definitions': typeof AuthenticatedDefinitionsIndexRoute
+  '/definitions/$definitionId': typeof AuthenticatedDefinitionsDefinitionIdIndexRoute
+  '/definitions/create': typeof AuthenticatedDefinitionsCreateIndexRoute
+  '/definitions/$definitionId/runtime/$runtimeId': typeof AuthenticatedDefinitionsDefinitionIdRuntimeRuntimeIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/definitions': typeof DefinitionsIndexRoute
-  '/definitions/$definitionId': typeof DefinitionsDefinitionIdIndexRoute
-  '/definitions/create': typeof DefinitionsCreateIndexRoute
-  '/definitions/$definitionId/runtime/$runtimeId': typeof DefinitionsDefinitionIdRuntimeRuntimeIdIndexRoute
+  '/sign-in': typeof SignInIndexRoute
+  '/definitions': typeof AuthenticatedDefinitionsIndexRoute
+  '/definitions/$definitionId': typeof AuthenticatedDefinitionsDefinitionIdIndexRoute
+  '/definitions/create': typeof AuthenticatedDefinitionsCreateIndexRoute
+  '/definitions/$definitionId/runtime/$runtimeId': typeof AuthenticatedDefinitionsDefinitionIdRuntimeRuntimeIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/definitions/': typeof DefinitionsIndexRoute
-  '/definitions/$definitionId/': typeof DefinitionsDefinitionIdIndexRoute
-  '/definitions/create/': typeof DefinitionsCreateIndexRoute
-  '/definitions/$definitionId/runtime/$runtimeId/': typeof DefinitionsDefinitionIdRuntimeRuntimeIdIndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/sign-in/': typeof SignInIndexRoute
+  '/_authenticated/definitions/': typeof AuthenticatedDefinitionsIndexRoute
+  '/_authenticated/definitions/$definitionId/': typeof AuthenticatedDefinitionsDefinitionIdIndexRoute
+  '/_authenticated/definitions/create/': typeof AuthenticatedDefinitionsCreateIndexRoute
+  '/_authenticated/definitions/$definitionId/runtime/$runtimeId/': typeof AuthenticatedDefinitionsDefinitionIdRuntimeRuntimeIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/sign-in'
     | '/definitions'
     | '/definitions/$definitionId'
     | '/definitions/create'
@@ -76,6 +94,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/sign-in'
     | '/definitions'
     | '/definitions/$definitionId'
     | '/definitions/create'
@@ -83,22 +102,29 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/definitions/'
-    | '/definitions/$definitionId/'
-    | '/definitions/create/'
-    | '/definitions/$definitionId/runtime/$runtimeId/'
+    | '/_authenticated'
+    | '/sign-in/'
+    | '/_authenticated/definitions/'
+    | '/_authenticated/definitions/$definitionId/'
+    | '/_authenticated/definitions/create/'
+    | '/_authenticated/definitions/$definitionId/runtime/$runtimeId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  DefinitionsIndexRoute: typeof DefinitionsIndexRoute
-  DefinitionsDefinitionIdIndexRoute: typeof DefinitionsDefinitionIdIndexRoute
-  DefinitionsCreateIndexRoute: typeof DefinitionsCreateIndexRoute
-  DefinitionsDefinitionIdRuntimeRuntimeIdIndexRoute: typeof DefinitionsDefinitionIdRuntimeRuntimeIdIndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  SignInIndexRoute: typeof SignInIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -106,44 +132,68 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/definitions/': {
-      id: '/definitions/'
+    '/sign-in/': {
+      id: '/sign-in/'
+      path: '/sign-in'
+      fullPath: '/sign-in'
+      preLoaderRoute: typeof SignInIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/definitions/': {
+      id: '/_authenticated/definitions/'
       path: '/definitions'
       fullPath: '/definitions'
-      preLoaderRoute: typeof DefinitionsIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedDefinitionsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/definitions/create/': {
-      id: '/definitions/create/'
+    '/_authenticated/definitions/create/': {
+      id: '/_authenticated/definitions/create/'
       path: '/definitions/create'
       fullPath: '/definitions/create'
-      preLoaderRoute: typeof DefinitionsCreateIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedDefinitionsCreateIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/definitions/$definitionId/': {
-      id: '/definitions/$definitionId/'
+    '/_authenticated/definitions/$definitionId/': {
+      id: '/_authenticated/definitions/$definitionId/'
       path: '/definitions/$definitionId'
       fullPath: '/definitions/$definitionId'
-      preLoaderRoute: typeof DefinitionsDefinitionIdIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedDefinitionsDefinitionIdIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/definitions/$definitionId/runtime/$runtimeId/': {
-      id: '/definitions/$definitionId/runtime/$runtimeId/'
+    '/_authenticated/definitions/$definitionId/runtime/$runtimeId/': {
+      id: '/_authenticated/definitions/$definitionId/runtime/$runtimeId/'
       path: '/definitions/$definitionId/runtime/$runtimeId'
       fullPath: '/definitions/$definitionId/runtime/$runtimeId'
-      preLoaderRoute: typeof DefinitionsDefinitionIdRuntimeRuntimeIdIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedDefinitionsDefinitionIdRuntimeRuntimeIdIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedDefinitionsIndexRoute: typeof AuthenticatedDefinitionsIndexRoute
+  AuthenticatedDefinitionsDefinitionIdIndexRoute: typeof AuthenticatedDefinitionsDefinitionIdIndexRoute
+  AuthenticatedDefinitionsCreateIndexRoute: typeof AuthenticatedDefinitionsCreateIndexRoute
+  AuthenticatedDefinitionsDefinitionIdRuntimeRuntimeIdIndexRoute: typeof AuthenticatedDefinitionsDefinitionIdRuntimeRuntimeIdIndexRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedDefinitionsIndexRoute: AuthenticatedDefinitionsIndexRoute,
+  AuthenticatedDefinitionsDefinitionIdIndexRoute:
+    AuthenticatedDefinitionsDefinitionIdIndexRoute,
+  AuthenticatedDefinitionsCreateIndexRoute:
+    AuthenticatedDefinitionsCreateIndexRoute,
+  AuthenticatedDefinitionsDefinitionIdRuntimeRuntimeIdIndexRoute:
+    AuthenticatedDefinitionsDefinitionIdRuntimeRuntimeIdIndexRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  DefinitionsIndexRoute: DefinitionsIndexRoute,
-  DefinitionsDefinitionIdIndexRoute: DefinitionsDefinitionIdIndexRoute,
-  DefinitionsCreateIndexRoute: DefinitionsCreateIndexRoute,
-  DefinitionsDefinitionIdRuntimeRuntimeIdIndexRoute:
-    DefinitionsDefinitionIdRuntimeRuntimeIdIndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  SignInIndexRoute: SignInIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

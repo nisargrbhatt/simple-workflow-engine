@@ -7,7 +7,7 @@ import {
 	fetchEditDefinition,
 	listDefinition,
 } from "@modules/definition";
-import { processTask, startEngine } from "@modules/engine";
+import { processTask, processTaskInternal, startEngine } from "@modules/engine";
 import { liveness, readiness } from "@modules/health";
 import { getRuntime, listRuntime } from "@modules/runtime";
 
@@ -19,6 +19,7 @@ export const router = contractOpenSpec.router({
 	engine: {
 		start: startEngine,
 		process: processTask,
+		processInternal: processTaskInternal,
 	},
 	definition: {
 		create: createDefinition,

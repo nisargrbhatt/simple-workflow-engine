@@ -26,7 +26,9 @@ import { queryClient } from "@lib/queryClient";
 import { ORPCError } from "@orpc/client";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
-export const Route = createFileRoute("/definitions/$definitionId/runtime/$runtimeId/")({
+export const Route = createFileRoute(
+	"/_authenticated/definitions/$definitionId/runtime/$runtimeId/"
+)({
 	component: Index,
 	loader: ({ params }) =>
 		queryClient.ensureQueryData(fetchRuntimeQuery({ id: Number(params.runtimeId) })),

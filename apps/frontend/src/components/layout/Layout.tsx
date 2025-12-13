@@ -5,6 +5,7 @@ import ContextFactory from "@/contexts/ContextFactory";
 import { Button } from "../ui/button";
 import type { FC, ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
+import { SignedIn, SignedOut, UserButton } from "@clerk/clerk-react";
 
 interface Props {
 	children: ReactNode;
@@ -18,7 +19,7 @@ const Layout: FC<Props> = ({ children }) => (
 					<Link to="/" className="text-xl font-bold">
 						<WorkflowIcon />
 					</Link>
-					<nav className="flex flex-row items-center justify-center gap-2">
+					<nav className="flex flex-row items-center justify-end gap-2">
 						<Link
 							to="/definitions"
 							className="text-sm text-muted-foreground transition-colors hover:text-foreground"
@@ -27,6 +28,19 @@ const Layout: FC<Props> = ({ children }) => (
 								Definitions
 							</Button>
 						</Link>
+						<SignedOut>
+							<Link
+								to="/sign-in"
+								className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+							>
+								<Button variant="ghost" size="sm" type="button">
+									Sign In
+								</Button>
+							</Link>
+						</SignedOut>
+						<SignedIn>
+							<UserButton />
+						</SignedIn>
 					</nav>
 				</div>
 			</header>

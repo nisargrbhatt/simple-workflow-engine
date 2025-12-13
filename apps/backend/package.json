@@ -10,6 +10,8 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
+    "@clerk/backend": "^2.27.0",
+    "@hono/clerk-auth": "^3.0.3",
     "@orpc/contract": "catalog:",
     "@orpc/openapi": "catalog:",
     "@orpc/server": "catalog:",
@@ -18,17 +20,17 @@
     "@repo/orpc": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@repo/utils": "workspace:*",
-    "axios": "^1.9.0",
-    "dotenv": "^16.5.0",
-    "drizzle-orm": "^0.43.1",
-    "hono": "^4.8.5",
+    "axios": "^1.13.2",
+    "dotenv": "^17.2.3",
+    "drizzle-orm": "^0.45.1",
+    "hono": "^4.11.0",
     "postgres": "^3.4.7",
     "zod": "catalog:"
   },
   "devDependencies": {
     "@types/bun": "latest",
-    "drizzle-kit": "^0.31.1",
-    "tsx": "^4.19.4",
+    "drizzle-kit": "^0.31.8",
+    "tsx": "^4.21.0",
     "typescript": "catalog:"
   }
 }

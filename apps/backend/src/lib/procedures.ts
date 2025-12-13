@@ -1,72 +1,49 @@
-import { oo } from "@orpc/openapi";
-import { ORPCError, os } from "@orpc/server";
-import type { HonoRequest } from "hono";
-
-type HonoContext = {
-	internal?: boolean;
-	req?: HonoRequest;
-};
+import { ORPCError } from "@orpc/server";
+import { getAuth } from "@hono/clerk-auth";
+import { contractOpenSpec } from "./implementor";
 
 const internalApiKey = process.env.SERVER_KEY;
 
-export const internalAuth = oo.spec(
-	os.$context<HonoContext>().middleware(({ context, next }) => {
-		if (context?.internal === true) {
-			return next();
-		}
-
-		const apiKey = context?.req?.header("x-api-key");
-
-		if (!apiKey) {
-			throw new ORPCError("UNAUTHORIZED", {
-				message: "No `x-api-key` Header Found",
-			});
-		}
-
-		if (apiKey !== internalApiKey) {
-			throw new ORPCError("UNAUTHORIZED", {
-				message: "Invalid API Key",
-			});
-		}
-
-		return next();
-	}),
-	{
-		security: [{ apiKey: [] }],
+export const privateAuthSpec = contractOpenSpec.use(({ context, next }) => {
+	if (!context?.honoContext) {
+		throw new ORPCError("UNAUTHORIZED", {
+			message: "Unauthorized",
+		});
 	}
-);
 
-export const privateAuth = oo.spec(
-	os.$context<HonoContext>().middleware(({ context, next }) => {
-		if (context?.internal === true) {
-			return next();
-		}
+	const auth = getAuth(context.honoContext);
 
-		const authHeader = context?.req?.header("authorization")?.split(" ")?.at(1);
-
-		if (!authHeader) {
-			throw new ORPCError("UNAUTHORIZED", {
-				message: "No Auth Header Found",
-			});
-		}
-
-		if (authHeader !== "token") {
-			throw new ORPCError("UNAUTHORIZED", {
-				message: "Invalid Token",
-			});
-		}
-
-		return next();
-	}),
-	{
-		security: [{ bearerAuth: [] }],
+	if (!auth?.userId) {
+		throw new ORPCError("UNAUTHORIZED", {
+			message: "Unauthorized",
+		});
 	}
-);
 
-export const publicProcedures = oo.spec(os.$context<HonoContext>(), {
-	security: [],
+	const authClaims = {
+		userId: auth.userId,
+	};
+
+	return next({
+		context: {
+			auth: authClaims,
+		},
+	});
 });
 
-export const privateProcedures = os.$context<HonoContext>().use(privateAuth);
+export const internalAuthSpec = contractOpenSpec.use(({ context, next }) => {
+	const apiKey = context?.internal?.apiKey;
 
-export const internalProcedures = os.$context<HonoContext>().use(internalAuth);
+	if (!apiKey) {
+		throw new ORPCError("UNAUTHORIZED", {
+			message: "No `x-api-key` Header Found",
+		});
+	}
+
+	if (apiKey !== internalApiKey) {
+		throw new ORPCError("UNAUTHORIZED", {
+			message: "Invalid API Key",
+		});
+	}
+
+	return next();
+});

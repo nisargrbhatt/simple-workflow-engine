@@ -32,7 +32,7 @@ export class WorkflowVM {
 		});
 
 		const evalResult = await safeAsync(
-			await vm.runInNewContext(
+			vm.runInNewContext(
 				`
             ${exec}
 

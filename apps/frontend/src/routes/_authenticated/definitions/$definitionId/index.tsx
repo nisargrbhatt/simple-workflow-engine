@@ -17,7 +17,7 @@ import { ORPCError } from "@orpc/client";
 import { Button } from "@/components/ui/button";
 import { listRuntimeQuery } from "@/api/query/listRuntime";
 
-export const Route = createFileRoute("/definitions/$definitionId/")({
+export const Route = createFileRoute("/_authenticated/definitions/$definitionId/")({
 	component: Index,
 	validateSearch: z.object({
 		page: z.coerce.number().int().min(1).catch(1).default(1),
